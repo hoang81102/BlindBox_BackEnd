@@ -55,8 +55,9 @@ The API will be available at `https://localhost:7166` or `http://localhost:5134`
 ## Project References
 
 - [DAO](http://_vscodecontentref_/11) - Data Access Layer
-- [Repository](http://_vscodecontentref_/12) - Repository Layer
-- [Services](http://_vscodecontentref_/13) - Service Layer
+- [MODEL](http://_vscodecontentref_/12) - Model Layer
+- [Repository](http://_vscodecontentref_/13) - Repository Layer
+- [Services](http://_vscodecontentref_/14) - Service Layer
 
 ## Configuration
 
