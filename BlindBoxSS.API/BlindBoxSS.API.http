@@ -1,0 +1,6 @@
+@BlindBoxSS.API_HostAddress = http://localhost:5134
+
+GET {{BlindBoxSS.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
