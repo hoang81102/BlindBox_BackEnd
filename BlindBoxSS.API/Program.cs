@@ -1,4 +1,4 @@
-using DAO.Interfaces;
+﻿using DAO.Interfaces;
 using DAO;
 using Model.Models;
 using Services.Interfaces;
@@ -75,9 +75,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
+// lỗi Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        policy => policy.WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials());
+});
+
+
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("roleId", "2"));
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("Role", "admin"));
+    options.AddPolicy("RequireCustomerRole", policy => policy.RequireClaim("Role", "customer"));
 });
 
 builder.Services.AddDbContext<LAPTOPTHINHContext>(options =>
@@ -87,6 +99,7 @@ builder.Services.AddDbContext<LAPTOPTHINHContext>(options =>
 builder.Services.AddScoped<IAccountDAO, AccountDAO>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+
 
 var app = builder.Build();
 
@@ -99,10 +112,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//app.MapIdentityApi<IdentityUser>();
+app.UseCors("AllowSpecificOrigins");
 
-app.UseAuthentication();
-app.UseAuthorization();
+//app.MapIdentityApi<IdentityUser>();
+app.UseRouting();
+app.UseAuthorization(); 
+app.UseAuthentication(); // Nếu có Authentication
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.MapControllers();
 

@@ -11,8 +11,6 @@ namespace Services.Interfaces
     {
         Task<Account?> AuthenticateAsync(string username, string password);
         Task<Account> LoginAsync(string email, string password);
-        Task RegisterAsync(Account user);
-
-
+        Task<bool> RegisterAccountAsync(string email, string password, string name, string phoneNumber);
     }
 }
