@@ -6,7 +6,6 @@ using Services;
 using Repository.Interfaces;
 using Repository;
 using Microsoft.EntityFrameworkCore;
-using Model.DAO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +13,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,13 +25,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<LAPTOPTHINHContext>()
+    .AddEntityFrameworkStores<BlindBoxDBContext>()
     .AddDefaultTokenProviders();
 
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlindBoxSS API", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -80,7 +80,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("roleId", "2"));
 });
 
-builder.Services.AddDbContext<LAPTOPTHINHContext>(options =>
+builder.Services.AddDbContext<BlindBoxDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
    
     

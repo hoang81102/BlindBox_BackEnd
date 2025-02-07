@@ -1,20 +1,14 @@
 ﻿using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Model.DAO;
 using Model.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAO
 {
     public class AccountDAO : IAccountDAO
     {
-        private readonly LAPTOPTHINHContext _context;
+        private readonly BlindBoxDBContext _context;
 
-        public AccountDAO(LAPTOPTHINHContext context)
+        public AccountDAO(BlindBoxDBContext context)
         {
             _context = context;
         }
