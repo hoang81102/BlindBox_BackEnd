@@ -6,15 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Model.Models;
 
-namespace Model.DAO;
+namespace DAO;
 
-public partial class LAPTOPTHINHContext : DbContext
+public partial class BlindBoxDBContext : DbContext
 {
-    public LAPTOPTHINHContext()
-    {
-    }
-
-    public LAPTOPTHINHContext(DbContextOptions<LAPTOPTHINHContext> options)
+    public BlindBoxDBContext(DbContextOptions<BlindBoxDBContext> options)
         : base(options)
     {
     }
@@ -56,7 +52,7 @@ public partial class LAPTOPTHINHContext : DbContext
     public virtual DbSet<WalletTransaction> WalletTransactions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"));
+        => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"));
 
     public static string GetConnectionString(string connectionStringName)
     {
@@ -73,11 +69,11 @@ public partial class LAPTOPTHINHContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.AccountId).HasName("PK__Account__349DA5A6E93588D4");
+            entity.HasKey(e => e.AccountId).HasName("PK__Account__349DA5A6E6744C13");
 
             entity.ToTable("Account");
 
-            entity.HasIndex(e => e.Email, "UQ__Account__A9D10534F86F420E").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Account__A9D10534BF444648").IsUnique();
 
             entity.Property(e => e.Email)
                 .IsRequired()
@@ -96,7 +92,7 @@ public partial class LAPTOPTHINHContext : DbContext
 
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasKey(e => e.AddressId).HasName("PK__Address__091C2AFB2F85C1E7");
+            entity.HasKey(e => e.AddressId).HasName("PK__Address__091C2AFBABE78BFE");
 
             entity.ToTable("Address");
 
@@ -118,12 +114,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Addresses)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Address__Account__4CA06362");
+                .HasConstraintName("FK__Address__Account__3A81B327");
         });
 
         modelBuilder.Entity<BankAccount>(entity =>
         {
-            entity.HasKey(e => e.BankAccountId).HasName("PK__BankAcco__4FC8E4A1CCBD3ACB");
+            entity.HasKey(e => e.BankAccountId).HasName("PK__BankAcco__4FC8E4A1E90558FA");
 
             entity.ToTable("BankAccount");
 
@@ -144,12 +140,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.BankAccounts)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BankAccou__Accou__7B5B524B");
+                .HasConstraintName("FK__BankAccou__Accou__693CA210");
         });
 
         modelBuilder.Entity<BlindBox>(entity =>
         {
-            entity.HasKey(e => e.BlindBoxId).HasName("PK__BlindBox__4FDFEC92A095391C");
+            entity.HasKey(e => e.BlindBoxId).HasName("PK__BlindBox__4FDFEC920A88B381");
 
             entity.ToTable("BlindBox");
 
@@ -167,12 +163,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Package).WithMany(p => p.BlindBoxes)
                 .HasForeignKey(d => d.PackageId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BlindBox__Packag__5AEE82B9");
+                .HasConstraintName("FK__BlindBox__Packag__48CFD27E");
         });
 
         modelBuilder.Entity<BlindBoxImage>(entity =>
         {
-            entity.HasKey(e => e.BlindBoxImageId).HasName("PK__BlindBox__37472975F718EDB0");
+            entity.HasKey(e => e.BlindBoxImageId).HasName("PK__BlindBox__3747297554523DA0");
 
             entity.ToTable("BlindBoxImage");
 
@@ -183,24 +179,24 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.BlindBox).WithMany(p => p.BlindBoxImages)
                 .HasForeignKey(d => d.BlindBoxId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BlindBoxI__Blind__01142BA1");
+                .HasConstraintName("FK__BlindBoxI__Blind__6EF57B66");
         });
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__Cart__51BCD7B734B741FC");
+            entity.HasKey(e => e.CartId).HasName("PK__Cart__51BCD7B743FF3D88");
 
             entity.ToTable("Cart");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cart__AccountId__6477ECF3");
+                .HasConstraintName("FK__Cart__AccountId__52593CB8");
         });
 
         modelBuilder.Entity<CartDetail>(entity =>
         {
-            entity.HasKey(e => e.CartDetailId).HasName("PK__CartDeta__01B6A6B4AC845E6A");
+            entity.HasKey(e => e.CartDetailId).HasName("PK__CartDeta__01B6A6B4EF2A0F25");
 
             entity.ToTable("CartDetail");
 
@@ -208,21 +204,21 @@ public partial class LAPTOPTHINHContext : DbContext
 
             entity.HasOne(d => d.BlindBox).WithMany(p => p.CartDetails)
                 .HasForeignKey(d => d.BlindBoxId)
-                .HasConstraintName("FK__CartDetai__Blind__68487DD7");
+                .HasConstraintName("FK__CartDetai__Blind__5629CD9C");
 
             entity.HasOne(d => d.Cart).WithMany(p => p.CartDetails)
                 .HasForeignKey(d => d.CartId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__CartDetai__CartI__6754599E");
+                .HasConstraintName("FK__CartDetai__CartI__5535A963");
 
             entity.HasOne(d => d.Package).WithMany(p => p.CartDetails)
                 .HasForeignKey(d => d.PackageId)
-                .HasConstraintName("FK__CartDetai__Packa__693CA210");
+                .HasConstraintName("FK__CartDetai__Packa__571DF1D5");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A0BC7EC06E7");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A0B49CBA89B");
 
             entity.ToTable("Category");
 
@@ -235,7 +231,7 @@ public partial class LAPTOPTHINHContext : DbContext
 
         modelBuilder.Entity<Delivery>(entity =>
         {
-            entity.HasKey(e => e.DeliveryId).HasName("PK__Delivery__626D8FCEAB21F780");
+            entity.HasKey(e => e.DeliveryId).HasName("PK__Delivery__626D8FCE734523B5");
 
             entity.ToTable("Delivery");
 
@@ -246,12 +242,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.Deliveries)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Delivery__OrderI__534D60F1");
+                .HasConstraintName("FK__Delivery__OrderI__412EB0B6");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCF2C5F6C07");
+            entity.HasKey(e => e.OrderId).HasName("PK__Order__C3905BCFC9AFD01F");
 
             entity.ToTable("Order");
 
@@ -266,17 +262,17 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order__AccountId__4F7CD00D");
+                .HasConstraintName("FK__Order__AccountId__3D5E1FD2");
 
             entity.HasOne(d => d.Address).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.AddressId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Order__AddressId__5070F446");
+                .HasConstraintName("FK__Order__AddressId__3E52440B");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36C94EBDF01");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D36CF3295335");
 
             entity.ToTable("OrderDetail");
 
@@ -286,21 +282,21 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.BlindBox).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.BlindBoxId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Blind__72C60C4A");
+                .HasConstraintName("FK__OrderDeta__Blind__60A75C0F");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Order__71D1E811");
+                .HasConstraintName("FK__OrderDeta__Order__5FB337D6");
 
             entity.HasOne(d => d.Package).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.PackageId)
-                .HasConstraintName("FK__OrderDeta__Packa__73BA3083");
+                .HasConstraintName("FK__OrderDeta__Packa__619B8048");
         });
 
         modelBuilder.Entity<Package>(entity =>
         {
-            entity.HasKey(e => e.PackageId).HasName("PK__Package__322035CCB47AF832");
+            entity.HasKey(e => e.PackageId).HasName("PK__Package__322035CC4594DCF3");
 
             entity.ToTable("Package");
 
@@ -311,12 +307,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Category).WithMany(p => p.Packages)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Package__Categor__5812160E");
+                .HasConstraintName("FK__Package__Categor__45F365D3");
         });
 
         modelBuilder.Entity<PackageImage>(entity =>
         {
-            entity.HasKey(e => e.PackageImageId).HasName("PK__PackageI__E506A3377452622B");
+            entity.HasKey(e => e.PackageImageId).HasName("PK__PackageI__E506A337AC060C11");
 
             entity.ToTable("PackageImage");
 
@@ -327,12 +323,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Package).WithMany(p => p.PackageImages)
                 .HasForeignKey(d => d.PackageId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PackageIm__Packa__7E37BEF6");
+                .HasConstraintName("FK__PackageIm__Packa__6C190EBB");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A381480081F");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payment__9B556A38EE3218ED");
 
             entity.ToTable("Payment");
 
@@ -347,12 +343,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Payment__OrderId__6C190EBB");
+                .HasConstraintName("FK__Payment__OrderId__59FA5E80");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Review__74BC79CE2BC7BE88");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Review__74BC79CEFC602964");
 
             entity.ToTable("Review");
 
@@ -366,22 +362,22 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Review__AccountI__787EE5A0");
+                .HasConstraintName("FK__Review__AccountI__66603565");
 
             entity.HasOne(d => d.OrderDetail).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.OrderDetailId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Review__OrderDet__778AC167");
+                .HasConstraintName("FK__Review__OrderDet__656C112C");
 
             entity.HasOne(d => d.Order).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Review__OrderId__76969D2E");
+                .HasConstraintName("FK__Review__OrderId__6477ECF3");
         });
 
         modelBuilder.Entity<Voucher>(entity =>
         {
-            entity.HasKey(e => e.VoucherId).HasName("PK__Voucher__3AEE79210CC90B3B");
+            entity.HasKey(e => e.VoucherId).HasName("PK__Voucher__3AEE79218EFD531F");
 
             entity.ToTable("Voucher");
 
@@ -397,12 +393,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.Vouchers)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Voucher__OrderId__6EF57B66");
+                .HasConstraintName("FK__Voucher__OrderId__5CD6CB2B");
         });
 
         modelBuilder.Entity<Wallet>(entity =>
         {
-            entity.HasKey(e => e.WalletId).HasName("PK__Wallet__84D4F90E52BE295B");
+            entity.HasKey(e => e.WalletId).HasName("PK__Wallet__84D4F90EE4F52C5B");
 
             entity.ToTable("Wallet");
 
@@ -411,12 +407,12 @@ public partial class LAPTOPTHINHContext : DbContext
             entity.HasOne(d => d.Account).WithMany(p => p.Wallets)
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Wallet__AccountI__5DCAEF64");
+                .HasConstraintName("FK__Wallet__AccountI__4BAC3F29");
         });
 
         modelBuilder.Entity<WalletTransaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__WalletTr__55433A6B34FF18CE");
+            entity.HasKey(e => e.TransactionId).HasName("PK__WalletTr__55433A6B378245CC");
 
             entity.ToTable("WalletTransaction");
 
@@ -432,12 +428,12 @@ public partial class LAPTOPTHINHContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.WalletTransactions)
                 .HasForeignKey(d => d.OrderId)
-                .HasConstraintName("FK__WalletTra__Order__619B8048");
+                .HasConstraintName("FK__WalletTra__Order__4F7CD00D");
 
             entity.HasOne(d => d.Wallet).WithMany(p => p.WalletTransactions)
                 .HasForeignKey(d => d.WalletId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__WalletTra__Walle__60A75C0F");
+                .HasConstraintName("FK__WalletTra__Walle__4E88ABD4");
         });
 
         OnModelCreatingPartial(modelBuilder);

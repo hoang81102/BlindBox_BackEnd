@@ -1,19 +1,20 @@
 ﻿using DAO.Interfaces;
 using DAO;
-using Model.Models;
 using Services.Interfaces;
 using Services;
 using Repository.Interfaces;
 using Repository;
 using Microsoft.EntityFrameworkCore;
-using Model.DAO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Repository.PackageRepo;
+using Repository.BlindBoxRepo;
+using Services.PackageSV;
+using Services.BlindBoxSV;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,13 +26,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<LAPTOPTHINHContext>()
+    .AddEntityFrameworkStores<BlindBoxDBContext>()
     .AddDefaultTokenProviders();
 
 
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlindBoxSS API", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -92,7 +93,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("RequireCustomerRole", policy => policy.RequireClaim("Role", "customer"));
 });
 
-builder.Services.AddDbContext<LAPTOPTHINHContext>(options =>
+builder.Services.AddDbContext<BlindBoxDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
    
     
@@ -100,6 +101,10 @@ builder.Services.AddScoped<IAccountDAO, AccountDAO>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 
+builder.Services.AddScoped<IPackageRepo, PackageRepo>();
+builder.Services.AddScoped<IPackageService, PackageService>();
+builder.Services.AddScoped<IBlindBoxRepo, BlindBoxRepo>();
+builder.Services.AddScoped<IBlindBoxService, BlindBoxService>();
 
 var app = builder.Build();
 
