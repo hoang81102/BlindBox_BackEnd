@@ -1,13 +1,12 @@
 ﻿using Model.Models;
-using Repository.Interfaces.PackageRepo;
-using Services.Interfaces.PackageS;
+using Repository.PackageRepo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services
+namespace Services.PackageSV
 {
     public class PackageService : IPackageService
     {

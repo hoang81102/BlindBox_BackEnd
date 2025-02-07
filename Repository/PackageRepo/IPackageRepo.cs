@@ -1,6 +1,6 @@
 ﻿using Model.Models;
 
-namespace Repository.Interfaces.PackageRepo
+namespace Repository.PackageRepo
 {
     public interface IPackageRepo
     {

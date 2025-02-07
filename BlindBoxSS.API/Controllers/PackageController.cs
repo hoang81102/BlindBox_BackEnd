@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces.PackageS;
 using Model.Models;
 using Microsoft.EntityFrameworkCore;
+using Services.PackageSV;
 
 namespace BlindBoxSS.API.Controllers
 {

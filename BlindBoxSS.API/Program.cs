@@ -1,19 +1,20 @@
 using DAO.Interfaces;
 using DAO;
-using Model.Models;
 using Services.Interfaces;
 using Services;
 using Repository.Interfaces;
 using Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
-
+using Repository.PackageRepo;
+using Repository.BlindBoxRepo;
+using Services.PackageSV;
+using Services.BlindBoxSV;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +88,11 @@ builder.Services.AddDbContext<BlindBoxDBContext>(options =>
 builder.Services.AddScoped<IAccountDAO, AccountDAO>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+
+builder.Services.AddScoped<IPackageRepo, PackageRepo>();
+builder.Services.AddScoped<IPackageService, PackageService>();
+builder.Services.AddScoped<IBlindBoxRepo, BlindBoxRepo>();
+builder.Services.AddScoped<IBlindBoxService, BlindBoxService>();
 
 var app = builder.Build();
 
