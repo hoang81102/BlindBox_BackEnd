@@ -12,5 +12,9 @@ namespace DAO.Interfaces
         Task<Account> GetAccountByEmailAsync(string email);
         Task AddAccountAsync(Account user);
         Task<Account?> GetUserByUsernameAndPasswordAsync(string username, string password);
+
+        Task<Account> GetAccountByAccountIdAsync(int accountId);
+        Task UpdateAsync(Account account);
+        Task SaveChangesAsync();
     }
 }

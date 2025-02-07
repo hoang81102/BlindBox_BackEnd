@@ -99,6 +99,10 @@ builder.Services.AddDbContext<LAPTOPTHINHContext>(options =>
 builder.Services.AddScoped<IAccountDAO, AccountDAO>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+builder.Services.AddSingleton<EmailService>();
+
+
+
 
 
 var app = builder.Build();

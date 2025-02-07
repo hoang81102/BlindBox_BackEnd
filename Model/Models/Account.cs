@@ -19,6 +19,8 @@ public partial class Account
 
     public string PhoneNumber { get; set; }
 
+    public bool IsVerify { get; set; } = false;
+
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
     public virtual ICollection<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();

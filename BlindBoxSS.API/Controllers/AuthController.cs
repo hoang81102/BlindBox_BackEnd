@@ -12,6 +12,7 @@ using Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Web;
 
 namespace BlindBoxSS.API.Controllers
 {
@@ -45,11 +46,10 @@ namespace BlindBoxSS.API.Controllers
                 {
                     return Conflict("Username already exists");
                 }
-              return Ok("Register Succesfully");
+              return Ok("Check your email to Verufy Account");
             }
             catch (Exception ex)
             {
-                // Log the error (you can use logging framework or just Console.WriteLine for testing)
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
 
@@ -73,7 +73,7 @@ namespace BlindBoxSS.API.Controllers
                 };
 
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? string.Empty));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ?? string.Empty));
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
                     _configuration["Jwt:Issuer"],
@@ -83,12 +83,50 @@ namespace BlindBoxSS.API.Controllers
                     signingCredentials: signIn
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-                return Ok(new { token = tokenString, User = user });
+                return Ok(new { token = tokenString, User = userInDb });
             }
             return BadRequest("Invalid credentials");
         }
 
-       
+        [AllowAnonymous]
+        [HttpGet("verify")]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]); // Dùng đúng secret key
+
+                var parameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                var principal = tokenHandler.ValidateToken(token, parameters, out SecurityToken validatedToken);
+                var email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+                if (email == null) return BadRequest("Token không hợp lệ");
+
+                // ✅ Xác thực tài khoản
+                await _userService.VerifyAccountAsync(email);
+
+                return Ok("Xác thực thành công! Bạn có thể đăng nhập ngay bây giờ.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Lỗi xác thực: {ex.Message}");
+            }
+        }
+
+
+
+
+
+
 
     }
 

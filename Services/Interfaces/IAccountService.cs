@@ -1,4 +1,5 @@
-﻿using Model.Models;
+﻿using BlindBoxSS.API.Response;
+using Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<Account?> AuthenticateAsync(string username, string password);
+        //Task<Account?> AuthenticateAsync(string username, string password);
+        Task<Account> GetUserByEmailAsync(string email);    
+        Task VerifyAccountAsync(string email);
         Task<Account> LoginAsync(string email, string password);
         Task<bool> RegisterAccountAsync(string email, string password, string name, string phoneNumber);
     }
