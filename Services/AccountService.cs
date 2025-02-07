@@ -1,27 +1,27 @@
 ﻿using Model.Models;
-using Repository;
 using Repository.Interfaces;
 using Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Services
 {
     public class AccountService:IAccountService
     {
-        private readonly IAccountRepo _userRepository;
+        private readonly IAccountRepo _accountRepository;
 
         public AccountService(IAccountRepo userRepository)
         {
-            _userRepository = userRepository;
+            _accountRepository = userRepository;
+        }
+
+        public Task<Account?> AuthenticateAsync(string username, string password)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Account> LoginAsync(string email, string password)
         {
-            var user = await _userRepository.GetAccountByEmail(email);
+            var user = await _accountRepository.GetAccountByEmail(email);
             if (user != null && user.Password == password)
             {
                 return user;
@@ -29,21 +29,24 @@ namespace Services
             return null;
         }
 
-        public async Task RegisterAsync(Account user)
+        public async Task<bool> RegisterAccountAsync(string email, string password, string name, string phoneNumber)
         {
-            var existingUser = await _userRepository.GetAccountByEmail(user.Email);
-            if (existingUser != null)
+            if (await _accountRepository.GetAccountByEmail(email) != null)
+                return false; // Email đã tồn tại
+
+            //var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+            var account = new Account
             {
-                throw new Exception("Email is already registered.");
-            }
-            await _userRepository.RegisterAccount(user);
+                Email = email,
+                Password = password,
+                Name = name,
+                PhoneNumber = phoneNumber,
+                Role = "user"
+            };
+            await _accountRepository.RegisterAccount(account);
+            return true;
         }
 
-        public async Task<Account?> AuthenticateAsync(string username, string password)
-        {
-            // Tìm kiếm người dùng trong cơ sở dữ liệu dựa trên tên đăng nhập và mật khẩu
-            var user = await _userRepository.GetUserByUsernameAndPasswordAsync(username, password);
-            return user;
-        }
+       
     }
 }
