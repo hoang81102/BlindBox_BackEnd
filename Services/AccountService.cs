@@ -82,7 +82,6 @@ namespace Services
             if (user.IsVerify)
             {
                 throw new InvalidOperationException("Tài khoản đã được xác thực.");
-                // send redirect den trang http://localhost:5000
             }
             user.IsVerify = true;
             await _accountRepository.UpdateAsync(user);

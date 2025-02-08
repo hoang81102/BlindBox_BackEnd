@@ -114,7 +114,7 @@ namespace BlindBoxSS.API.Controllers
                 var checkEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 if (checkEmail == null) return BadRequest("Token không hợp lệ");
                     await _userService.VerifyAccountAsync(checkEmail);
-                    return Ok("IsVerifed"); 
+                     return Redirect("http://localhost:5000/welcome");
             }
             catch (Exception ex)
             {
