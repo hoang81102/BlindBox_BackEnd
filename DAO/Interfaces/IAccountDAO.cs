@@ -16,5 +16,7 @@ namespace DAO.Interfaces
         Task<Account> GetAccountByAccountIdAsync(int accountId);
         Task UpdateAsync(Account account);
         Task SaveChangesAsync();
+
+        Task UpdatePasswordAsync(Account account,string newpasswordhashed);
     }
 }

@@ -17,5 +17,6 @@ namespace Repository.Interfaces
         Task<Account> GetAccountByAccountId(int accountId);
         Task UpdateAsync(Account account);
         Task SaveChangesAsync();
+        Task UpdatePasswordAsync(Account account, string newpasswordhashed);
     }
 }

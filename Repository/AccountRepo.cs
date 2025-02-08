@@ -49,5 +49,10 @@ namespace Repository
         {
             await _accountDAO.SaveChangesAsync();
         }
+
+        public async Task UpdatePasswordAsync(Account account, string newpasswordhashed)
+        {
+            await _accountDAO.UpdatePasswordAsync(account, newpasswordhashed);
+        }
     }
 }

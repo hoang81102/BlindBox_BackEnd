@@ -51,5 +51,12 @@ namespace DAO
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdatePasswordAsync(Account account, string newpasswordhashed)
+        {
+            account.Password = newpasswordhashed;
+            _context.Accounts.Update(account);
+            await _context.SaveChangesAsync();
+        }
     }
 }

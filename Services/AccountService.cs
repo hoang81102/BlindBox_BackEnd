@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Services
@@ -31,11 +32,6 @@ namespace Services
             var user = await _accountRepository.GetAccountByEmail(email);
             return user;
         }
-
-
-
-
-
         public async Task<Account> LoginAsync(string email, string password)
         {
             var user = await _accountRepository.GetAccountByEmail(email);
@@ -50,17 +46,13 @@ namespace Services
                 throw new UnauthorizedAccessException("Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản.");
             }
 
-            return user; // Đăng nhập thành công
+            return user;
         }
-
-
 
         public async Task<bool> RegisterAccountAsync(string email, string password, string name, string phoneNumber)
         {
             if (await _accountRepository.GetAccountByEmail(email) != null)
                 return false; 
-
-           
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
             var account = new Account
@@ -70,43 +62,48 @@ namespace Services
                 Name = name,
                 PhoneNumber = phoneNumber,
                 Role = "user",
-                IsVerify = false // 🚨 Mặc định chưa xác thực
+                IsVerify = false
             };
-
             await _accountRepository.RegisterAccount(account);
-
-            
             string token = _emailService.GenerateEmailVerificationToken(email);
                Console.WriteLine(token);
             await _emailService.SendVerificationEmail(email, token);
 
             return true;
-        }
-        
-
+        }       
         public async Task VerifyAccountAsync(string email)
         {
-            // Lấy thông tin tài khoản từ database
             var user = await _accountRepository.GetAccountByEmail(email);
 
             if (user == null)
             {
                 throw new KeyNotFoundException("Tài khoản không tồn tại.");
             }
-
-            // Kiểm tra nếu tài khoản đã được xác thực
             if (user.IsVerify)
             {
                 throw new InvalidOperationException("Tài khoản đã được xác thực.");
+                // send redirect den trang http://localhost:5000
             }
-
-            // Cập nhật trạng thái xác thực
             user.IsVerify = true;
-
-            // Lưu thay đổi vào database
             await _accountRepository.UpdateAsync(user);
             await _accountRepository.SaveChangesAsync();
         }
+
+        public async Task<bool> UpdatePasswordAsync(string email, string newPassword)
+        {
+            var user = await _accountRepository.GetAccountByEmail(email);
+            if (user == null)
+            {
+                throw new Exception("Người dùng không tồn tại.");
+            }
+
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            await _accountRepository.UpdatePasswordAsync(user, hashedPassword);
+
+            return true;
+        }
+
+
 
     }
 }
