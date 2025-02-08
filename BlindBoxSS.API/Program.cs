@@ -25,6 +25,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<BlindBoxDBContext>()
     .AddDefaultTokenProviders();
@@ -100,6 +102,10 @@ builder.Services.AddDbContext<BlindBoxDBContext>(options =>
 builder.Services.AddScoped<IAccountDAO, AccountDAO>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+builder.Services.AddSingleton<EmailService>();
+
+
+
 
 builder.Services.AddScoped<IPackageRepo, PackageRepo>();
 builder.Services.AddScoped<IPackageService, PackageService>();

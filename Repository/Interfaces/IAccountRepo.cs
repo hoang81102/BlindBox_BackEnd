@@ -13,5 +13,10 @@ namespace Repository.Interfaces
         Task RegisterAccount(Account account);
 
         Task<Account?> GetUserByUsernameAndPasswordAsync(string username, string password);
+
+        Task<Account> GetAccountByAccountId(int accountId);
+        Task UpdateAsync(Account account);
+        Task SaveChangesAsync();
+        Task UpdatePasswordAsync(Account account, string newpasswordhashed);
     }
 }
