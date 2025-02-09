@@ -152,24 +152,40 @@ public class EmailService:IEmailService
 
     public async Task SendResetPasswordEmail(string toEmail, string token)
     {
-        var encodedEmail = HttpUtility.UrlEncode(toEmail);
         var encodedToken = HttpUtility.UrlEncode(token);
-        string resetPasswordUrl = $"https://yourfrontend.com/reset-password?email={encodedEmail}&token={encodedToken}";
+        string resetPasswordUrl = $"http://localhost:5000/api/Auth/verify-reset-token?token={encodedToken}";
         string emailBody = $@"
-    <html>
-    <body>
-        <p>Chào bạn,</p>
-        <p>Vui lòng <a href='{resetPasswordUrl}'>nhấn vào đây</a> để đặt lại mật khẩu.</p>
-        <p>Cảm ơn!</p>
-    </body>
-    </html>";
+<html>
+<head>
+    <style>
+        body {{ font-family: 'Arial', sans-serif; background-color: #f4f4f4; color: #333; padding: 20px; }}
+        .container {{ max-width: 600px; background: #ffffff; border-radius: 10px; padding: 30px; margin: auto; }}
+        .header {{ text-align: center; background: linear-gradient(to right, #ff512f, #dd2476); color: white; padding: 20px; border-radius: 10px 10px 0 0; }}
+        .header h2 {{ margin: 0; font-size: 24px; font-weight: bold; }}
+        .content {{ text-align: center; padding: 20px; font-size: 16px; }}
+        .button {{ background: linear-gradient(to right, #ff512f, #dd2476); color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; }}
+        .footer {{ margin-top: 20px; font-size: 12px; text-align: center; color: #777; }}
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'><h2>Reset Your Password</h2></div>
+        <div class='content'>
+            <p>Click the button below to reset your password:</p>
+            <p><a href='{resetPasswordUrl}' class='button'>Reset Password</a></p>
+            <p>If you did not request this, please ignore this email.</p>
+        </div>
+        <div class='footer'><p>Thank you!</p></div>
+    </div>
+</body>
+</html>";
 
         try
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("BlindBox Sales Website", _config["EmailSettings:SenderEmail"]));
+            message.From.Add(new MailboxAddress("Blind Box Sales Website", _config["EmailSettings:SenderEmail"]));
             message.To.Add(new MailboxAddress("", toEmail));
-            message.Subject = "Đặt lại mật khẩu";
+            message.Subject = "Reset Your Password";
             var bodyBuilder = new BodyBuilder { HtmlBody = emailBody };
             message.Body = bodyBuilder.ToMessageBody();
             using var client = new SmtpClient();
@@ -180,9 +196,10 @@ public class EmailService:IEmailService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Lỗi gửi email: {ex.Message}");
+            Console.WriteLine($"Error sending email: {ex.Message}");
         }
     }
+
 
     public string GeneratePasswordResetToken(string email)
     {
