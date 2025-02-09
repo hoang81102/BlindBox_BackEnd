@@ -127,48 +127,68 @@ namespace BlindBoxSS.API.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] DTO.ForgotPasswordRequest request)
         {
+            if (request == null || string.IsNullOrEmpty(request.Email))
+            {
+                return BadRequest("Dữ liệu không hợp lệ.");
+            }
+
             var user = await _userService.GetUserByEmailAsync(request.Email);
             if (user == null)
             {
-                return BadRequest("Email không tồn tại.");
+                return Conflict("Email không tồn tại.");
             }
 
-            // Tạo token reset password
-            var token = _emailService.GeneratePasswordResetToken(request.Email);
-
-            // Gửi email reset mật khẩu
-            await _emailService.SendResetPasswordEmail(request.Email, token);
-
-            return Ok("Vui lòng kiểm tra email của bạn để đặt lại mật khẩu.");
+            try
+            {
+                var token = _emailService.GeneratePasswordResetToken(request.Email);
+                await _emailService.SendResetPasswordEmail(request.Email, token);
+                return Ok("Vui lòng kiểm tra email để đặt lại mật khẩu.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi hệ thống: {ex.Message}");
+            }
         }
 
 
 
         [AllowAnonymous]
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] DTO.ResetPasswordRequest request)
+        [HttpPost("confirm-reset-password")]
+        public async Task<IActionResult> ConfirmResetPassword([FromBody] DTO.ResetPasswordRequest request)
         {
             var principal = ValidateToken(request.Token);
             if (principal == null)
             {
-                return BadRequest("Token không hợp lệ hoặc đã hết hạn.");
+                return BadRequest("Invalid or expired token.");
             }
 
             var email = principal.FindFirstValue(ClaimTypes.Email);
             if (string.IsNullOrEmpty(email))
             {
-                return BadRequest("Email không hợp lệ.");
+                return BadRequest("Invalid email.");
             }
 
             try
             {
                 await _userService.UpdatePasswordAsync(email, request.NewPassword);
-                return Ok("Mật khẩu đã được đặt lại thành công.");
+                return Ok("Your password has been reset successfully.");
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error: {ex.Message}");
             }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("verify-reset-token")]
+        public IActionResult VerifyResetToken([FromQuery] string token)
+        {
+            var principal = ValidateToken(token);
+            if (principal == null)
+            {
+                return Redirect("http://localhost:5000/somethingwrong");
+            }
+            return Redirect("http://localhost:5000/resetpassword");
         }
 
 
@@ -176,7 +196,6 @@ namespace BlindBoxSS.API.Controllers
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]);
-
             try
             {
                 var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -197,13 +216,6 @@ namespace BlindBoxSS.API.Controllers
                 return null;
             }
         }
-
-
-
-
-
-
-
 
     }
 
