@@ -2,6 +2,7 @@
 using BlindBoxSS.API.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Web;
 
 namespace BlindBoxSS.API.Controllers
 {
@@ -22,11 +24,13 @@ namespace BlindBoxSS.API.Controllers
     {
         private readonly IAccountService _userService;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
 
-        public AuthController(IAccountService userService, IConfiguration configuration)
+        public AuthController(IAccountService userService, IConfiguration configuration, IEmailService emailService)
         {
             _userService = userService;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         [AllowAnonymous]
@@ -41,15 +45,14 @@ namespace BlindBoxSS.API.Controllers
             try
             {
                 var registeredUser = await _userService.RegisterAccountAsync(request.Email, request.Password, request.Name, request.PhoneNumber);
-                if (registeredUser == null)
+                if (registeredUser == false)
                 {
-                    return Conflict("Username already exists");
+                    return Conflict("Email already exists");
                 }
-              return Ok("Register Succesfully");
+              return Ok("Check your email to Verufy Account");
             }
             catch (Exception ex)
             {
-                // Log the error (you can use logging framework or just Console.WriteLine for testing)
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
 
@@ -73,7 +76,7 @@ namespace BlindBoxSS.API.Controllers
                 };
 
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? string.Empty));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ?? string.Empty));
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
                     _configuration["Jwt:Issuer"],
@@ -83,12 +86,136 @@ namespace BlindBoxSS.API.Controllers
                     signingCredentials: signIn
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-                return Ok(new { token = tokenString, User = user });
+                return Ok(new { token = tokenString, User = userInDb });
             }
             return BadRequest("Invalid credentials");
         }
 
-       
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]); // Dùng đúng secret key
+
+                var parameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                var principal = tokenHandler.ValidateToken(token, parameters, out SecurityToken validatedToken);
+                /*var email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;*/
+                var checkEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                if (checkEmail == null) return BadRequest("Token không hợp lệ");
+                    await _userService.VerifyAccountAsync(checkEmail);
+                     return Redirect("http://localhost:5000/welcome");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Lỗi xác thực: {ex.Message}");
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] DTO.ForgotPasswordRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.Email))
+            {
+                return BadRequest("Dữ liệu không hợp lệ.");
+            }
+
+            var user = await _userService.GetUserByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return Conflict("Email không tồn tại.");
+            }
+
+            try
+            {
+                var token = _emailService.GeneratePasswordResetToken(request.Email);
+                await _emailService.SendResetPasswordEmail(request.Email, token);
+                return Ok("Vui lòng kiểm tra email để đặt lại mật khẩu.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Lỗi hệ thống: {ex.Message}");
+            }
+        }
+
+
+
+        [AllowAnonymous]
+        [HttpPost("confirm-reset-password")]
+        public async Task<IActionResult> ConfirmResetPassword([FromBody] DTO.ResetPasswordRequest request)
+        {
+            var principal = ValidateToken(request.Token);
+            if (principal == null)
+            {
+                return BadRequest("Invalid or expired token.");
+            }
+
+            var email = principal.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Invalid email.");
+            }
+
+            try
+            {
+                await _userService.UpdatePasswordAsync(email, request.NewPassword);
+                return Ok("Your password has been reset successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("verify-reset-token")]
+        public IActionResult VerifyResetToken([FromQuery] string token)
+        {
+            var principal = ValidateToken(token);
+            if (principal == null)
+            {
+                return Redirect("http://localhost:5000/somethingwrong");
+            }
+            return Redirect("http://localhost:5000/resetpassword");
+        }
+
+
+        private ClaimsPrincipal? ValidateToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]);
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = _configuration["Jwt:Issuer"],
+                    ValidAudience = _configuration["Jwt:Audience"],
+                    ValidateLifetime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
     }
 

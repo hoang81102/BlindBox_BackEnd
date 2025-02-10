@@ -30,6 +30,27 @@ namespace DAO
             return await _context.Accounts.FirstOrDefaultAsync(u => u.Email == email && u.Password == password );  // && u.IsDeleted == false
         }
 
+        public async Task<Account> GetAccountByAccountIdAsync(int accountId)
+        {
+            return await _context.Accounts.FirstOrDefaultAsync(u => u.AccountId == accountId);
+        }
 
+        public async Task UpdateAsync(Account account)
+        {
+            _context.Accounts.Update(account);
+            await Task.CompletedTask;
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdatePasswordAsync(Account account, string newpasswordhashed)
+        {
+            account.Password = newpasswordhashed;
+            _context.Accounts.Update(account);
+            await _context.SaveChangesAsync();
+        }
     }
 }

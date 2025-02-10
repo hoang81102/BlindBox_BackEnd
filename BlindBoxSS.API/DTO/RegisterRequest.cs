@@ -21,5 +21,7 @@ namespace BlindBoxSS.API.DTO
         [Phone(ErrorMessage = "Invalid phone number format")]
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits")]
         public string PhoneNumber { get; set; }
+
+
     }
 }
