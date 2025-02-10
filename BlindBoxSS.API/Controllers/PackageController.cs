@@ -2,9 +2,12 @@
 using Model.Models;
 using Microsoft.EntityFrameworkCore;
 using Services.PackageSV;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BlindBoxSS.API.Controllers
 {
+
+    
     [Route("api/[controller]")]
     [ApiController]
     public class PackageController : Controller
@@ -16,6 +19,7 @@ namespace BlindBoxSS.API.Controllers
             _packageService = packageService;
         }
 
+        
         [HttpGet("GetAllPackage")]
         public IActionResult GetAllPackage()
         {

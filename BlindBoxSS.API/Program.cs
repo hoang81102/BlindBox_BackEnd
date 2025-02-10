@@ -15,8 +15,15 @@ using Repository.PackageRepo;
 using Repository.BlindBoxRepo;
 using Services.PackageSV;
 using Services.BlindBoxSV;
+using BlindBoxSS.API.Modelss.Momo;
+using Services.Momo;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+builder.Services.AddScoped<IMomoService, MomoService>();
+builder.Services.AddHttpClient<IMomoService, MomoService>();
+
 
 
 // Add services to the container.
@@ -26,6 +33,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<BlindBoxDBContext>()
@@ -68,14 +76,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateLifetime = true,
             ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.")))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!))
         };
     });
+
 
 
 // lỗi Cors
@@ -89,10 +98,11 @@ builder.Services.AddCors(options =>
 });
 
 
+
+
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("Role", "admin"));
-    options.AddPolicy("RequireCustomerRole", policy => policy.RequireClaim("Role", "customer"));
+        options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("Role", "admin"));
 });
 
 builder.Services.AddDbContext<BlindBoxDBContext>(options =>
@@ -103,6 +113,9 @@ builder.Services.AddScoped<IAccountDAO, AccountDAO>();
 builder.Services.AddScoped<IAccountService,AccountService>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddSingleton<EmailService>();
+builder.Services.AddScoped<IWalletDao, WalletDAO>();
+builder.Services.AddScoped<IWalletRepo, WalletRepository>();
+builder.Services.AddScoped<IWalletService, WalletService>();
 
 
 
@@ -127,8 +140,9 @@ app.UseCors("AllowSpecificOrigins");
 
 //app.MapIdentityApi<IdentityUser>();
 app.UseRouting();
-app.UseAuthorization(); 
+
 app.UseAuthentication(); // Nếu có Authentication
+app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();

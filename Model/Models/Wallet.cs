@@ -2,6 +2,8 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Model.Models;
 
@@ -13,6 +15,8 @@ public partial class Wallet
 
     public decimal Balance { get; set; }
 
+    [ForeignKey("AccountId")]
+    [JsonIgnore]
     public virtual Account Account { get; set; }
 
     public virtual ICollection<WalletTransaction> WalletTransactions { get; set; } = new List<WalletTransaction>();

@@ -25,12 +25,14 @@ namespace BlindBoxSS.API.Controllers
         private readonly IAccountService _userService;
         private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
+        private readonly IWalletService _walletService;
 
-        public AuthController(IAccountService userService, IConfiguration configuration, IEmailService emailService)
+        public AuthController(IAccountService userService, IConfiguration configuration, IEmailService emailService,IWalletService walletService)
         {
             _userService = userService;
             _configuration = configuration;
             _emailService = emailService;
+            _walletService = walletService;
         }
 
         [AllowAnonymous]
@@ -39,44 +41,60 @@ namespace BlindBoxSS.API.Controllers
         {
             if (request == null)
             {
-                return BadRequest("User data is null");
+                return BadRequest("User data is null.");
             }
 
             try
             {
                 var registeredUser = await _userService.RegisterAccountAsync(request.Email, request.Password, request.Name, request.PhoneNumber);
-                if (registeredUser == false)
+                if (!registeredUser)
                 {
-                    return Conflict("Email already exists");
+                    return Conflict("Email already exists.");
                 }
-              return Ok("Check your email to Verufy Account");
+
+                // Tạo ví cho tài khoản mới
+                var newUser = await _userService.GetUserByEmailAsync(request.Email);
+                if (newUser != null)
+                {
+                    var newWallet = new Wallet
+                    {
+                        AccountId = newUser.AccountId,
+                        Balance = 0
+                    };
+                    await _walletService.CreateWalletAsync(newWallet);
+                }
+
+                return Ok("Check your email to verify account.");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-
         }
 
+
         [AllowAnonymous]
-        [HttpPost]
-        [Route("api/User/Login")]
+        [HttpPost("login")]
         public async Task<ActionResult<Account>> Login([FromBody] LoginDTO user)
         {
             var userInDb = await _userService.LoginAsync(user.Username, user.Password);
             if (userInDb != null)
             {
                 var claims = new List<Claim>
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"] ?? string.Empty),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim("Username", userInDb.Email),
-                    new Claim("Password", userInDb.Password),
-                    new Claim("Role", userInDb.Role.ToString()) // Đảm bảo roleId được thêm vào
-                };
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"] ?? string.Empty),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            new Claim("Username", userInDb.Email),
+                            new Claim("AccountId", userInDb.AccountId.ToString()),
+                            new Claim("Role", userInDb.Role.ToString())  // Thêm claim Role vào token
+                        };
+
+
 
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"] ?? string.Empty));
+
+
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
                     _configuration["Jwt:Issuer"],
@@ -86,10 +104,23 @@ namespace BlindBoxSS.API.Controllers
                     signingCredentials: signIn
                 );
                 string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-                return Ok(new { token = tokenString, User = userInDb });
+
+                // Lấy thông tin ví của người dùng
+                var wallet = await _walletService.GetWalletByAccountIdAsync(userInDb.AccountId);
+
+                return Ok(new
+                {
+                    token = tokenString,
+                    User = userInDb,
+                    Wallet = wallet
+                });
             }
-            return BadRequest("Invalid credentials");
+
+            return BadRequest("Invalid credentials.");
         }
+
+      
+
 
         [AllowAnonymous]
         [HttpGet]

@@ -2,6 +2,8 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Model.Models;
 
@@ -9,9 +11,15 @@ public partial class Account
 {
     public int AccountId { get; set; }
 
+    [Required]
+    [EmailAddress]
+    [MaxLength(255)]
     public string Email { get; set; }
 
+    [Required]
+    [MinLength(6)]
     public string Password { get; set; }
+  
 
     public string Role { get; set; }
 
@@ -31,5 +39,8 @@ public partial class Account
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
+    [JsonIgnore]
     public virtual ICollection<Wallet> Wallets { get; set; } = new List<Wallet>();
+
+  
 }
