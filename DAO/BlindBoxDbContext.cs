@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
@@ -9,11 +11,15 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class BlindBoxDbContext: DbContext
+    public class BlindBoxDbContext: IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public BlindBoxDbContext(DbContextOptions<BlindBoxDbContext> options) : base(options) { }
 
-        public DbSet<Account> Accounts { get; set; }
+
+
+        public DbSet<ApplicationUser> Accounts { get; set; }
+
+        public DbSet<ApplicationRole> Roles {  get; set; }
 
         public DbSet<BlindBox> BlindBoxes { get; set; }
 
@@ -34,6 +40,13 @@ namespace DAO
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+     
+            // Seed dữ liệu Role
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Id = "2", Name = "User", NormalizedName = "USER" }
+            );
+
         }
     }
 }

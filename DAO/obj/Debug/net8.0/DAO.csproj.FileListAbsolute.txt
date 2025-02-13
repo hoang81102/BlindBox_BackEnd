@@ -15,3 +15,4 @@ E:\ProJectSWD392\BlindBoxSS.API\DAO\obj\Debug\net8.0\refint\DAO.dll
 E:\ProJectSWD392\BlindBoxSS.API\DAO\obj\Debug\net8.0\DAO.pdb
 E:\ProJectSWD392\BlindBoxSS.API\DAO\obj\Debug\net8.0\DAO.genruntimeconfig.cache
 E:\ProJectSWD392\BlindBoxSS.API\DAO\obj\Debug\net8.0\ref\DAO.dll
+E:\ProJectSWD392\BlindBoxSS.API\DAO\obj\Debug\net8.0\DAO.sourcelink.json

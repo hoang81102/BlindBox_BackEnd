@@ -17,3 +17,4 @@ E:\ProJectSWD392\BlindBoxSS.API\Repositories\obj\Debug\net8.0\Repositories.pdb
 E:\ProJectSWD392\BlindBoxSS.API\Repositories\obj\Debug\net8.0\ref\Repositories.dll
 E:\ProJectSWD392\BlindBoxSS.API\Repositories\bin\Debug\net8.0\Repositories.runtimeconfig.json
 E:\ProJectSWD392\BlindBoxSS.API\Repositories\obj\Debug\net8.0\Repositories.genruntimeconfig.cache
+E:\ProJectSWD392\BlindBoxSS.API\Repositories\obj\Debug\net8.0\Repositories.sourcelink.json

@@ -19,3 +19,4 @@ E:\ProJectSWD392\BlindBoxSS.API\Services\obj\Debug\net8.0\Services.pdb
 E:\ProJectSWD392\BlindBoxSS.API\Services\obj\Debug\net8.0\ref\Services.dll
 E:\ProJectSWD392\BlindBoxSS.API\Services\bin\Debug\net8.0\Services.runtimeconfig.json
 E:\ProJectSWD392\BlindBoxSS.API\Services\obj\Debug\net8.0\Services.genruntimeconfig.cache
+E:\ProJectSWD392\BlindBoxSS.API\Services\obj\Debug\net8.0\Services.sourcelink.json

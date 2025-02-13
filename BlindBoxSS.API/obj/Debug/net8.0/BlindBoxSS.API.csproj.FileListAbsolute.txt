@@ -142,3 +142,12 @@ E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\ru\Microsoft.Cod
 E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\obj\Debug\net8.0\BlindBoxSS.API.sourcelink.json
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\AutoMapper.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.Extensions.Options.dll

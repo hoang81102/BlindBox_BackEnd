@@ -10,7 +10,9 @@ using System.Threading.Tasks;
 
 namespace Models
 {
- 
+    [Table("Accounts")] 
+
+    
     public class Account 
     {
         [Key]
