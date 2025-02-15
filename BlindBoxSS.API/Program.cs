@@ -1,13 +1,16 @@
-using BlindBoxSS.API;
+﻿using BlindBoxSS.API;
 using BlindBoxSS.API.Exceptions;
 using BlindBoxSS.API.Extensions;
 using DAO;
 using DAO.Mapping;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Models;
 using Services;
+using Services.AccountService;
+using Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+
 
 
 //Add DB
@@ -58,9 +67,20 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<BlindBoxDbContext>()
-    .AddDefaultTokenProviders();
+//Set up Email Sender
+builder.Services.AddTransient<IEmailService, EmailService>();
+
+
+//builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+//    .AddEntityFrameworkStores<BlindBoxDbContext>()
+//    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+{
+    options.SignIn.RequireConfirmedEmail = true; // 🚀 Yêu cầu email phải được xác thực mới cho đăng nhập
+})
+.AddEntityFrameworkStores<BlindBoxDbContext>()
+.AddDefaultTokenProviders(); // 🚀 Cần thiết để tạo token xác thực email
+
 
 
 builder.Services.AddAuthorization(options =>
@@ -74,6 +94,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 
 // Regsitering AutoMapper
@@ -88,11 +110,6 @@ builder.Services.ConfigureCors();
 
 
 
-
-
-
-
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -101,7 +118,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 app.UseCors("CorsPolicy");
 
-// cau hinh Role va t?o t�i kho?n account m?c ??nh n?u ch?a c�. (T?c l� Ch?y h�m trong SeedRoles)
+// cau hinh Role va t?o tài kho?n account m?c ??nh n?u ch?a có. (T?c là Ch?y hàm trong SeedRoles)
 var scope = app.Services.CreateScope();
 await SeedRoles.InitializeRoles(scope.ServiceProvider);
 
@@ -111,6 +128,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// x? lý l?i 403
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync("{ \"message\": \"You dont have permission for this action. Pls Login With Admin Account\" }");
+    }
+});
 
 
 

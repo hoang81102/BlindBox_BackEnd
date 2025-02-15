@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DAO.Contracts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Services;
+using Models;
+using Services.AccountService;
+using System.Web;
 using static DAO.Contracts.UserRequestAndResponse;
 
 namespace BlindBoxSS.API.Controllers
@@ -9,14 +13,17 @@ namespace BlindBoxSS.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAccountService _accountService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthController"/> class.
         /// </summary>
         /// <param name="userService">The user service for managing user-related operations.</param>
-        public AuthController(IAccountService userService)
+        public AuthController(IAccountService userService, UserManager<ApplicationUser> userManager)
         {
             _accountService = userService;
+            _userManager = userManager;
+            
         }
 
         /// <summary>
@@ -42,6 +49,14 @@ namespace BlindBoxSS.API.Controllers
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
             var response = await _accountService.LoginAsync(request);
+            if (response == null) {
+                return Unauthorized(new ErrorResponse
+                {
+                    Title = "Email Not Confirmed",
+                    StatusCode = 401,
+                    Message = "Email chưa được xác nhận! Vui lòng kiểm tra email của bạn."
+                });
+            }
             return Ok(response);
         }
 
@@ -112,5 +127,50 @@ namespace BlindBoxSS.API.Controllers
             await _accountService.DeleteAsync(id);
             return Ok();
         }
+
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Title = "Invalid Request",
+                    StatusCode = 400,
+                    Message = "Thông tin xác thực không hợp lệ."
+                });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    Title = "User Not Found",
+                    StatusCode = 404,
+                    Message = "Không tìm thấy người dùng."
+                });
+            }
+
+
+            string decodedToken = Uri.UnescapeDataString(token);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Xác thực email thành công! Bạn có thể đăng nhập ngay bây giờ." });
+            }
+
+            return BadRequest(new ErrorResponse
+            {
+                Title = "Email Confirmation Failed",
+                StatusCode = 400,
+                Message = "Xác thực email thất bại. Token có thể đã hết hạn hoặc không hợp lệ."
+            });
+        }
+
+
+
+
     }
 }

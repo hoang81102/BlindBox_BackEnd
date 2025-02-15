@@ -151,3 +151,8 @@ E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.AspNet
 E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
 E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
 E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\MailKit.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\MimeKit.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+E:\ProJectSWD392\BlindBoxSS.API\BlindBoxSS.API\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll

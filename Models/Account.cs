@@ -39,6 +39,6 @@ namespace Models
 
         public bool IsVerify { get; set; } = false;
 
-        public virtual ICollection<Address>? Address { get; set; }
+        //public virtual ICollection<Address>? Address { get; set; }
     }
 }

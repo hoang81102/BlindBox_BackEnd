@@ -1,6 +1,27 @@
 [
   {
     "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "Method": "ConfirmEmail",
+    "RelativePath": "api/confirm-email",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
     "Method": "GetCurrentUser",
     "RelativePath": "api/current-user",
     "HttpMethod": "GET",

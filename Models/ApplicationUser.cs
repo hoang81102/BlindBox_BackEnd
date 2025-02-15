@@ -12,7 +12,6 @@ namespace Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Gender { get; set; }
-
         public string PhoneNumber { get; set; } // Thêm số điện thoại
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }

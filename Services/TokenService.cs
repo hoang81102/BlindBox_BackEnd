@@ -54,16 +54,16 @@ namespace Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user?.UserName ?? string.Empty),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim("UserName", user?.UserName ?? string.Empty),
+                new Claim("AccountId", user.Id),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim("FirstName",user.FirstName),  
                 new Claim("LastName", user.LastName),
-                new Claim("Gender",user.Gender)
+                new Claim("Gender",user.Gender),
             };
 
             var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            claims.AddRange(roles.Select(role => new Claim("Role", role)));
 
             return claims;
         }
