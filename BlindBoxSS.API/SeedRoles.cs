@@ -22,7 +22,7 @@ namespace BlindBoxSS.API
             }
 
             // Tạo tài khoản Admin mặc định nếu chưa có
-            var adminEmail = "blindboxsaleswebsite@gmail.com";
+            var adminEmail = "blindboxsaleswebsite123@gmail.com";
             var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
 
             if (existingAdmin == null)
@@ -30,12 +30,13 @@ namespace BlindBoxSS.API
                 var adminUser = new ApplicationUser
                 {
                     Id = Guid.NewGuid().ToString(),
-                    UserName = "Mystic BlindBox",
+                    UserName = "MysticBlindBox",
                     Email = adminEmail,
                     FirstName = "Mystic",
                     LastName = "BlindBox",
                     Gender = "Male",
                     PhoneNumber = "0123456789",
+                    Address = "Thu Duc",
                     EmailConfirmed = true,
                     CreateAt = DateTime.UtcNow,
                     UpdateAt = DateTime.UtcNow
@@ -43,10 +44,16 @@ namespace BlindBoxSS.API
 
                 var result = await userManager.CreateAsync(adminUser, "Admin@123");
 
-                if (result.Succeeded)
+                if (!result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                    foreach (var error in result.Errors)
+                    {
+                        Console.WriteLine($"Lỗi: {error.Description}");
+                    }
                 }
+
+                    await userManager.AddToRoleAsync(adminUser, "Admin");
+                
             }
         }
     }

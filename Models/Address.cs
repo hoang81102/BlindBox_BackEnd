@@ -47,6 +47,6 @@ namespace Models
         [Required]
         public DateTime UpdatedAt { get; set; }
 
-        public virtual Account? Account { get; set; }
+        //public virtual ApplicationUser? applicationUser { get; set; }
     }
 }

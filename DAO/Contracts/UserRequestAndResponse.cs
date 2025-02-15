@@ -12,6 +12,9 @@
 
             public string PhoneNumber { get; set; } // Thêm số điện thoại
 
+            public string Address { get; set; }
+
+
         }
 
 

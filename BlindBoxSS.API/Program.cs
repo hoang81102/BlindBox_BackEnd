@@ -3,14 +3,17 @@ using BlindBoxSS.API.Exceptions;
 using BlindBoxSS.API.Extensions;
 using DAO;
 using DAO.Mapping;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Models;
 using Services;
 using Services.AccountService;
 using Services.Email;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,7 +38,7 @@ builder.Services.AddDbContext<BlindBoxDbContext>(options =>
 // Adding Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "User Auth", Version = "v1", Description = "Services to Authenticate user" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlindBoxSS API", Version = "v1", Description = "Services to BlindBox Sale Website" });
 
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -69,6 +72,8 @@ builder.Services.AddSwaggerGen(c =>
 
 //Set up Email Sender
 builder.Services.AddTransient<IEmailService, EmailService>();
+
+
 
 
 //builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -144,6 +149,8 @@ app.Use(async (context, next) =>
 
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

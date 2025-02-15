@@ -63,7 +63,8 @@ namespace Services
             };
 
             var roles = await _userManager.GetRolesAsync(user);
-            claims.AddRange(roles.Select(role => new Claim("Role", role)));
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role))); // 🚀 Sửa thành ClaimTypes.Role
+
 
             return claims;
         }
