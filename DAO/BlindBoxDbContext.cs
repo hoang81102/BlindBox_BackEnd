@@ -33,7 +33,6 @@ namespace DAO
 
         public DbSet<PackageImage> PackageImages { get; set; }
 
-        public DbSet<Address> Address { get; set; }
 
 
 

@@ -14,10 +14,6 @@ namespace Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CartId { get; set; }
 
-        [Required]
-        public int AccountId { get; set; }
-
-        public virtual Account? Account { get; set; }
 
         public virtual ICollection<CartDetail>? CartDetails { get; set; }
     }
