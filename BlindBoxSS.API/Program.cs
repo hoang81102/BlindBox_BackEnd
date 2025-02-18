@@ -6,7 +6,10 @@ using DAO.Mapping;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -27,7 +30,12 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 
+// Add services to the container.
 
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
@@ -145,8 +153,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Regsitering AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
-
-
+   
+    
 // Adding Jwt from extension method
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJwt(builder.Configuration);
@@ -195,7 +203,14 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
-app.UseAuthorization();
+//app.MapIdentityApi<IdentityUser>();
+app.UseRouting();
+app.UseAuthorization(); 
+app.UseAuthentication(); // Nếu có Authentication
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.MapControllers();
 

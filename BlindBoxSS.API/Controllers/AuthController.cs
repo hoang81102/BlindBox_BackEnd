@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,8 @@ namespace BlindBoxSS.API.Controllers
 {
     [Route("api/")]
     [Authorize]
+    [Route("api/[controller]")]
+    [ApiController]
     public class AuthController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -51,7 +54,7 @@ namespace BlindBoxSS.API.Controllers
         {
             var response = await _accountService.RegisterAsync(request);
             return Ok(response);
-        }
+            }
 
         /// <summary>
         /// Logs in a user.
@@ -61,7 +64,7 @@ namespace BlindBoxSS.API.Controllers
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
-        {
+            {
             var response = await _accountService.LoginAsync(request);
             if (response == null) {
                 return Unauthorized(new ErrorResponse
@@ -70,9 +73,9 @@ namespace BlindBoxSS.API.Controllers
                     StatusCode = 401,
                     Message = "Email chưa được xác nhận! Vui lòng kiểm tra email của bạn."
                 });
-            }
+                }
             return Ok(response);
-        }
+            }
 
         /// <summary>
         /// Gets a user by ID.
@@ -82,10 +85,10 @@ namespace BlindBoxSS.API.Controllers
         [HttpGet("user/{id}")]
         [Authorize]
         public async Task<IActionResult> GetById(Guid id)
-        {
+            {
             var response = await _accountService.GetByIdAsync(id);
             return Ok(response);
-        }
+            }
 
         /// <summary>
         /// Refreshes the access token using the refresh token.
@@ -137,7 +140,7 @@ namespace BlindBoxSS.API.Controllers
         [HttpDelete("user/{id}")]
         [Authorize]
         public async Task<IActionResult> Delete(Guid id)
-        {
+                {
             await _accountService.DeleteAsync(id);
             return Ok();
         }
@@ -147,9 +150,9 @@ namespace BlindBoxSS.API.Controllers
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
-            {
+        {
                 return BadRequest(new ErrorResponse
-                {
+            {
                     Title = "Invalid Request",
                     StatusCode = 400,
                     Message = "Thông tin xác thực không hợp lệ."
@@ -191,7 +194,7 @@ namespace BlindBoxSS.API.Controllers
             if (user == null)
             {
                 return NotFound(new ErrorResponse
-                {
+            {
                     Title = "User Not Found",
                     StatusCode = 404,
                     Message = "Không tìm thấy người dùng với email này."
@@ -201,7 +204,7 @@ namespace BlindBoxSS.API.Controllers
             if (user.EmailConfirmed)
             {
                 return BadRequest(new ErrorResponse
-                {
+            {
                     Title = "Email Already Confirmed",
                     StatusCode = 400,
                     Message = "Email đã được xác nhận trước đó."
@@ -221,9 +224,9 @@ namespace BlindBoxSS.API.Controllers
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
-            {
+        {
                 return NotFound(new ErrorResponse
-                {
+            {
                     Title = "User Not Found",
                     StatusCode = 404,
                     Message = "Không tìm thấy người dùng với email này."
@@ -266,7 +269,7 @@ namespace BlindBoxSS.API.Controllers
                 StatusCode = 400,
                 Message = "Đặt lại mật khẩu thất bại. Token có thể đã hết hạn hoặc không hợp lệ."
             });
-        }
+            }
 
         [HttpPost("google-login")]
         [AllowAnonymous]
@@ -281,12 +284,12 @@ namespace BlindBoxSS.API.Controllers
                     StatusCode = 401,
                     Message = "Email chưa được xác nhận! Vui lòng kiểm tra email của bạn."
                 });
-            }
+        }
             return Ok(response);
 
-        }
-
-        
-
     }
+
+
+
+}
 }
