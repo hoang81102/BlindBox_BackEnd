@@ -305,8 +305,9 @@ namespace Services.AccountService
 
         public async Task<UserResponse> LoginGoogle(GoogleLoginRequest request)
         {
+            var payload = await GoogleJsonWebSignature.ValidateAsync(request.Token)
+                          ?? throw new Exception("Invalid Google token.");
 
-            var payload = await GoogleJsonWebSignature.ValidateAsync(request.Token) ?? throw new Exception("Invalid Google token."); ;
             string email = payload.Email;
             string name = payload.Name;
             string googleId = payload.Subject;
@@ -316,12 +317,35 @@ namespace Services.AccountService
             {
                 user = new ApplicationUser
                 {
-                    Email = email
-                    
+                    Email = email,
+                    UserName = googleId,
+                    FirstName = payload.Name ?? "Unknown",
+                    LastName = "",
+                    FullName = name,
+                    Gender = "Not Specified",
+                    PhoneNumber = "Unknown",
+                    Address = "Not Provided",
+                    CreateAt = DateTime.UtcNow,
+                    UpdateAt = DateTime.UtcNow
                 };
-                await _userManager.AddToRoleAsync(user, "User");
-                await _userManager.CreateAsync(user);
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                {
+                    var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                    _logger.LogError("User creation failed: {errors}", errors);
+                    throw new Exception($"User creation failed: {errors}");
+                }
+
+                var roleResult = await _userManager.AddToRoleAsync(user, "User");
+                if (!roleResult.Succeeded)
+                {
+                    var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+                    _logger.LogError("Role assignment failed: {errors}", errors);
+                    throw new Exception($"Role assignment failed: {errors}");
+                }
             }
+
             // Generate access token
             var token = await _tokenService.GenerateToken(user);
 
@@ -332,15 +356,13 @@ namespace Services.AccountService
             using var sha256 = SHA256.Create();
             var refreshTokenHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(refreshToken));
             user.RefreshToken = Convert.ToBase64String(refreshTokenHash);
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(2);
-
-            user.CreateAt = DateTime.Now;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);  // Use UtcNow instead of Now
 
             // Update user information in database
-            var result = await _userManager.UpdateAsync(user);
-            if (!result.Succeeded)
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
             {
-                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                var errors = string.Join(", ", updateResult.Errors.Select(e => e.Description));
                 _logger.LogError("Failed to update user: {errors}", errors);
                 throw new Exception($"Failed to update user: {errors}");
             }
@@ -351,8 +373,8 @@ namespace Services.AccountService
             userResponse.Address = user.Address;
 
             return userResponse;
-        
-    }
+        }
+
     }
 
 }
