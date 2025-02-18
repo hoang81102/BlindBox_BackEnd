@@ -1,0 +1,45 @@
+# Visual Studio files
+.vs/
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+*.exe
+*.dll
+*.pdb
+*.cache
+*.log
+*.ilk
+*.ilk
+*.ilk
+*.aps
+*.ncb
+*.sdf
+*.opendb
+
+# ASP.NET config files
+BlindBoxSS.API/appsettings.json
+BlindBoxSS.API/appsettings.Development.json
+
+# Entity Framework Migrations
+Migrations/
+
+# Node.js dependencies (for React)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs/
+*.log
+
+# Publish output
+publish/
+out/
+
