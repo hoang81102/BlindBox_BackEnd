@@ -28,7 +28,7 @@ namespace BlindBoxSS.API.Exceptions
                     response.Title = exception.GetType().Name;
                     break;
 
-                case UnauthorizedAccessException: // Xử lý lỗi 403 Forbidden
+                case UnauthorizedAccessException:
                     response.StatusCode = (int)HttpStatusCode.Forbidden;
                     response.Title = "Forbidden";
                     response.Message = "You dont have permission for this action. Pls Login With Admin Account";

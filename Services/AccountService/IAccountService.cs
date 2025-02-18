@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Services.Request;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,8 @@ namespace Services.AccountService
         Task<CurrentUserResponse> RefreshTokenAsync(RefreshTokenRequest request);
 
         Task<UserResponse> LoginAsync(UserLoginRequest request);
+
+        Task<UserResponse> LoginGoogle(GoogleLoginRequest request);
 
 
         //Send Email

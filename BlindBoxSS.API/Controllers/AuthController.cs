@@ -1,28 +1,42 @@
 ﻿using DAO.Contracts;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services.AccountService;
+using Services.Email;
 using System.Web;
 using static DAO.Contracts.UserRequestAndResponse;
+using System.Security.Claims;
+using Google.Apis.Auth;
+using Services.Request;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BlindBoxSS.API.Controllers
 {
     [Route("api/")]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAccountService _accountService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthController"/> class.
         /// </summary>
         /// <param name="userService">The user service for managing user-related operations.</param>
-        public AuthController(IAccountService userService, UserManager<ApplicationUser> userManager)
+        public AuthController(IAccountService userService, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailService emailService)
         {
             _accountService = userService;
             _userManager = userManager;
+            _emailService = emailService;
+            _signInManager = signInManager;
             
         }
 
@@ -169,8 +183,110 @@ namespace BlindBoxSS.API.Controllers
             });
         }
 
+        [HttpPost("resend-confirm-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResendConfirmEmail([FromBody] ResendConfirmEmailRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    Title = "User Not Found",
+                    StatusCode = 404,
+                    Message = "Không tìm thấy người dùng với email này."
+                });
+            }
+
+            if (user.EmailConfirmed)
+            {
+                return BadRequest(new ErrorResponse
+                {
+                    Title = "Email Already Confirmed",
+                    StatusCode = 400,
+                    Message = "Email đã được xác nhận trước đó."
+                });
+            }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            await _emailService.ResendConfirmationEmailAsync(user, token);
+
+            return Ok(new { Message = "Email xác thực đã được gửi lại!" });
+        }
 
 
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] DAO.Contracts.UserRequestAndResponse.ForgotPasswordRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    Title = "User Not Found",
+                    StatusCode = 404,
+                    Message = "Không tìm thấy người dùng với email này."
+                });
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _emailService.SendResetPasswordEmailAsync(user, token);
+
+            return Ok(new { Message = "Email đặt lại mật khẩu đã được gửi!" });
+        }
+
+
+        [HttpPost("reset-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] DAO.Contracts.UserRequestAndResponse.ResetPasswordRequest request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                return NotFound(new ErrorResponse
+                {
+                    Title = "User Not Found",
+                    StatusCode = 404,
+                    Message = "Không tìm thấy người dùng với email này."
+                });
+            }
+
+            var decodedToken = Uri.UnescapeDataString(request.Token);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, request.NewPassword);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { Message = "Mật khẩu đã được đặt lại thành công!" });
+            }
+
+            return BadRequest(new ErrorResponse
+            {
+                Title = "Reset Password Failed",
+                StatusCode = 400,
+                Message = "Đặt lại mật khẩu thất bại. Token có thể đã hết hạn hoặc không hợp lệ."
+            });
+        }
+
+        [HttpPost("google-login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            var response = await _accountService.LoginGoogle(request);
+            if (response == null)
+            {
+                return Unauthorized(new ErrorResponse
+                {
+                    Title = "Email Not Confirmed",
+                    StatusCode = 401,
+                    Message = "Email chưa được xác nhận! Vui lòng kiểm tra email của bạn."
+                });
+            }
+            return Ok(response);
+
+        }
+
+        
 
     }
 }

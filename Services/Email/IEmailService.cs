@@ -12,6 +12,8 @@ namespace Services.Email
         Task SendEmailAsync(string toEmail, string subject, string message);
         Task SendConfirmationEmailAsync(ApplicationUser user, string token);
         Task ResendConfirmationEmailAsync(ApplicationUser user, string token);
+
+        Task SendResetPasswordEmailAsync(ApplicationUser user, string token);
     }
 
 }

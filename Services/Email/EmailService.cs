@@ -63,9 +63,23 @@ namespace Services.Email
 
         public async Task ResendConfirmationEmailAsync(ApplicationUser user, string token)
         {
-            var confirmationLink = $"http://localhost:3000/api/auth/confirm-email?userId={user.Id}&token={token}";
-            await SendEmailAsync(user.Email, "Xác thực lại email", $"Nhấp vào link: <a href='{confirmationLink}'>Xác nhận</a>");
+            var encodedToken = Uri.EscapeDataString(token);
+            var confirmationLink = $"http://localhost:5000/api/confirm-email?userId={user.Id}&token={encodedToken}";
+            var message = $"Bạn đã yêu cầu xác thực lại email. Nhấp vào link sau để xác nhận: <a href='{confirmationLink}'>Xác nhận</a>";
+
+            await SendEmailAsync(user.Email, "Xác thực lại email", message);
         }
+
+        public async Task SendResetPasswordEmailAsync(ApplicationUser user, string token)
+        {
+            var encodedToken = Uri.EscapeDataString(token);
+            var resetLink = $"http://localhost:3000/reset-password?email={user.Email}&token={encodedToken}";
+            var message = $"Nhấp vào link để đặt lại mật khẩu: <a href='{resetLink}'>Đặt lại mật khẩu</a>";
+
+            await SendEmailAsync(user.Email, "Đặt lại mật khẩu", message);
+        }
+
+
 
     }
 

@@ -3,6 +3,8 @@ using BlindBoxSS.API.Exceptions;
 using BlindBoxSS.API.Extensions;
 using DAO;
 using DAO.Mapping;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -34,6 +36,17 @@ builder.Services.AddDbContext<BlindBoxDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 
 // Adding Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -73,6 +86,24 @@ builder.Services.AddSwaggerGen(c =>
 //Set up Email Sender
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+//// Cấu hình Google OAuth
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+//})
+//.AddCookie()
+//.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+//{
+//    options.ClientId = builder.Configuration["Google:ClientId"];
+//    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+//    options.CallbackPath = "/"; // Phải trùng với Google Cloud
+//});
+
+
+
+
 
 
 
@@ -84,7 +115,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.SignIn.RequireConfirmedEmail = true; // 🚀 Yêu cầu email phải được xác thực mới cho đăng nhập
 })
 .AddEntityFrameworkStores<BlindBoxDbContext>()
+.AddSignInManager()
 .AddDefaultTokenProviders(); // 🚀 Cần thiết để tạo token xác thực email
+
 
 
 
@@ -100,6 +133,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 
 
@@ -122,6 +156,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 app.UseCors("CorsPolicy");
+// Sử dụng CORS
+app.UseCors("AllowAll");
 
 // cau hinh Role va t?o tài kho?n account m?c ??nh n?u ch?a có. (T?c là Ch?y hàm trong SeedRoles)
 var scope = app.Services.CreateScope();
@@ -145,6 +181,7 @@ app.Use(async (context, next) =>
         await context.Response.WriteAsync("{ \"message\": \"You dont have permission for this action. Pls Login With Admin Account\" }");
     }
 });
+
 
 
 

@@ -1,16 +1,22 @@
 ﻿using AutoMapper;
 using Azure.Messaging;
 using DAO.Contracts;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Models;
+using Repositories.UnitOfWork;
 using Services.Email;
+using Services.Request;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -139,6 +145,7 @@ namespace Services.AccountService
             var userResponse = _mapper.Map<ApplicationUser, UserResponse>(user);
             userResponse.AccessToken = token;
             userResponse.RefreshToken = refreshToken;
+            userResponse.Address = user.Address;
 
             return userResponse;
         }
@@ -296,10 +303,58 @@ namespace Services.AccountService
             return true;
         }
 
+        public async Task<UserResponse> LoginGoogle(GoogleLoginRequest request)
+        {
 
+            var payload = await GoogleJsonWebSignature.ValidateAsync(request.Token) ?? throw new Exception("Invalid Google token."); ;
+            string email = payload.Email;
+            string name = payload.Name;
+            string googleId = payload.Subject;
 
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    Email = email
+                    
+                };
+                await _userManager.AddToRoleAsync(user, "User");
+                await _userManager.CreateAsync(user);
+            }
+            // Generate access token
+            var token = await _tokenService.GenerateToken(user);
 
+            // Generate refresh token
+            var refreshToken = _tokenService.GenerateRefreshToken();
 
+            // Hash the refresh token and store it in the database or override the existing refresh token
+            using var sha256 = SHA256.Create();
+            var refreshTokenHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(refreshToken));
+            user.RefreshToken = Convert.ToBase64String(refreshTokenHash);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(2);
+
+            user.CreateAt = DateTime.Now;
+
+            // Update user information in database
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                _logger.LogError("Failed to update user: {errors}", errors);
+                throw new Exception($"Failed to update user: {errors}");
+            }
+
+            var userResponse = _mapper.Map<ApplicationUser, UserResponse>(user);
+            userResponse.AccessToken = token;
+            userResponse.RefreshToken = refreshToken;
+            userResponse.Address = user.Address;
+
+            return userResponse;
+        
     }
+    }
+
 }
+
 

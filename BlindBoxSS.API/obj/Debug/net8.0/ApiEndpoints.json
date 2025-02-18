@@ -32,6 +32,38 @@
   },
   {
     "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "Method": "ForgotPassword",
+    "RelativePath": "api/forgot-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "DAO.Contracts.UserRequestAndResponse\u002BForgotPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "Method": "GoogleLogin",
+    "RelativePath": "api/google-login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Services.Request.GoogleLoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/login",
     "HttpMethod": "POST",
@@ -73,6 +105,38 @@
       {
         "Name": "request",
         "Type": "DAO.Contracts.UserRequestAndResponse\u002BUserRegisterRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "Method": "ResendConfirmEmail",
+    "RelativePath": "api/resend-confirm-email",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "DAO.Contracts.UserRequestAndResponse\u002BResendConfirmEmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "DAO.Contracts.UserRequestAndResponse\u002BResetPasswordRequest",
         "IsRequired": true
       }
     ],

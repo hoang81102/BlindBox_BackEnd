@@ -17,6 +17,25 @@
 
         }
 
+        public class ResendConfirmEmailRequest
+        {
+            public string Email { get; set; }
+        }
+
+
+        public class ForgotPasswordRequest
+        {
+            public string Email { get; set; }
+        }
+
+        public class ResetPasswordRequest
+        {
+            public string Email { get; set; }
+            public string Token { get; set; }
+            public string NewPassword { get; set; }
+        }
+
+
 
         public class UserResponse
         {
@@ -31,6 +50,8 @@
             public DateTime UpdateAt { get; set; }
             public string? AccessToken { get; set; }
             public string? RefreshToken { get; set; }
+
+            public string Address { get; set; }
 
 
         }
