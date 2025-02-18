@@ -8,6 +8,8 @@ Logs/
 # Generated files
 project.lock.json
 .vs/
+bin/
+obj/
 
 # mstest test results
 TestResults
@@ -18,6 +20,8 @@ TestResults
 # User-specific files
 *.suo
 *.user
+*.suo
+*.userosscache
 *.sln.docstates
 
 # Build results
@@ -50,6 +54,7 @@ ipch/
 *.ncb
 *.opensdf
 *.sdf
+*.opendb
 
 # Visual Studio profiler
 *.psess

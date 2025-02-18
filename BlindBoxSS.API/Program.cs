@@ -1,22 +1,33 @@
-﻿using DAO.Interfaces;
+﻿using BlindBoxSS.API;
+using BlindBoxSS.API.Exceptions;
+using BlindBoxSS.API.Extensions;
 using DAO;
-using Services.Interfaces;
-using Services;
-using Repository.Interfaces;
-using Repository;
-using Microsoft.EntityFrameworkCore;
+using DAO.Mapping;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Repository.PackageRepo;
-using Repository.BlindBoxRepo;
-using Services.PackageSV;
-using Services.BlindBoxSV;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Models;
+using Repositories.Interface;
+using Repositories.Repo;
+using Services;
+using Services.AccountService;
+using Services.Email;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 
 // Add services to the container.
@@ -26,23 +37,45 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<BlindBoxDBContext>()
-    .AddDefaultTokenProviders();
 
 
+
+
+//Add DB
+builder.Services.AddDbContext<BlindBoxDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
+
+// Adding Swagger
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlindBoxSS API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlindBoxSS API", Version = "v1", Description = "Services to BlindBox Sale Website" });
+
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
+        BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your token"
+        Description = "Please enter a valid token in the following format: {your token here} do not add the word 'Bearer' before it."
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -54,65 +87,95 @@ builder.Services.AddSwaggerGen(c =>
                 {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
-                }
+                },
+                Scheme = "oauth2",
+                Name = "Bearer",
+                In = ParameterLocation.Header,
             },
-            Array.Empty<string>()
+            new List<string>()
         }
     });
 });
 
-// Configure authentication and authorization
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateLifetime = true,
-            ValidateAudience = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.")))
-        };
-    });
+//Set up Email Sender
+builder.Services.AddTransient<IEmailService, EmailService>();
+
+//// Cấu hình Google OAuth
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+//})
+//.AddCookie()
+//.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+//{
+//    options.ClientId = builder.Configuration["Google:ClientId"];
+//    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+//    options.CallbackPath = "/"; // Phải trùng với Google Cloud
+//});
 
 
-// lỗi Cors
-builder.Services.AddCors(options =>
+
+
+
+
+
+//builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+//    .AddEntityFrameworkStores<BlindBoxDbContext>()
+//    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
-    options.AddPolicy("AllowSpecificOrigins",
-        policy => policy.WithOrigins("http://localhost:3000")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials());
-});
+    options.SignIn.RequireConfirmedEmail = true; // 🚀 Yêu cầu email phải được xác thực mới cho đăng nhập
+})
+.AddEntityFrameworkStores<BlindBoxDbContext>()
+.AddSignInManager()
+.AddDefaultTokenProviders(); // 🚀 Cần thiết để tạo token xác thực email
+
+
 
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireClaim("Role", "admin"));
-    options.AddPolicy("RequireCustomerRole", policy => policy.RequireClaim("Role", "customer"));
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
 });
 
-builder.Services.AddDbContext<BlindBoxDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Adding Services  
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+
+
+
+// Regsitering AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
    
     
-builder.Services.AddScoped<IAccountDAO, AccountDAO>();
-builder.Services.AddScoped<IAccountService,AccountService>();
-builder.Services.AddScoped<IAccountRepo, AccountRepo>();
-builder.Services.AddSingleton<EmailService>();
+// Adding Jwt from extension method
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.ConfigureCors();
 
 
 
 
-builder.Services.AddScoped<IPackageRepo, PackageRepo>();
-builder.Services.AddScoped<IPackageService, PackageService>();
-builder.Services.AddScoped<IBlindBoxRepo, BlindBoxRepo>();
-builder.Services.AddScoped<IBlindBoxService, BlindBoxService>();
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseCors("CorsPolicy");
+// Sử dụng CORS
+app.UseCors("AllowAll");
+
+// cau hinh Role va t?o tài kho?n account m?c ??nh n?u ch?a có. (T?c là Ch?y hàm trong SeedRoles)
+var scope = app.Services.CreateScope();
+await SeedRoles.InitializeRoles(scope.ServiceProvider);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -121,9 +184,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// x? lý l?i 403
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync("{ \"message\": \"You dont have permission for this action. Pls Login With Admin Account\" }");
+    }
+});
+
+
+
+
 app.UseHttpsRedirection();
 
-app.UseCors("AllowSpecificOrigins");
+app.UseAuthentication();
 
 //app.MapIdentityApi<IdentityUser>();
 app.UseRouting();
