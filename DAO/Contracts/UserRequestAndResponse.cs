@@ -14,7 +14,6 @@
 
             public string Address { get; set; }
 
-
         }
 
         public class ResendConfirmEmailRequest

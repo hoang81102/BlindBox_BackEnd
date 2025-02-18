@@ -15,6 +15,7 @@ using System.Security.Claims;
 using Google.Apis.Auth;
 using Services.Request;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Reflection.Metadata.Ecma335;
 
 namespace BlindBoxSS.API.Controllers
 {
@@ -172,15 +173,10 @@ namespace BlindBoxSS.API.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
             if (result.Succeeded)
             {
-                return Ok(new { Message = "Xác thực email thành công! Bạn có thể đăng nhập ngay bây giờ." });
+                return Redirect("http://localhost:3000/welcome");
             }
 
-            return BadRequest(new ErrorResponse
-            {
-                Title = "Email Confirmation Failed",
-                StatusCode = 400,
-                Message = "Xác thực email thất bại. Token có thể đã hết hạn hoặc không hợp lệ."
-            });
+            return Redirect("http://localhost:3000/NotFound");
         }
 
         [HttpPost("resend-confirm-email")]

@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 namespace Models
 {
     [Table("Accounts")] 
-
-    
     public class Account 
     {
         [Key]
@@ -39,6 +37,6 @@ namespace Models
 
         public bool IsVerify { get; set; } = false;
 
-        //public virtual ICollection<Address>? Address { get; set; }
+       // public virtual ICollection<Address>? Address { get; set; }
     }
 }

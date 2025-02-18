@@ -29,7 +29,6 @@ namespace Models
         public virtual ICollection<PackageImage>? Images { get; set; }
 
         public virtual Cart? Cart { get; set; }
-
        
     }
 }
