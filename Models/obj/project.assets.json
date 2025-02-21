@@ -4595,19 +4595,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\thinh\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj",
+      "projectUniqueName": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Models\\Models.csproj",
       "projectName": "Models",
-      "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj",
-      "packagesPath": "C:\\Users\\thinh\\.nuget\\packages\\",
-      "outputPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\obj\\",
+      "projectPath": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Models\\Models.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Models\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\thinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4616,8 +4621,6 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
-        "D:\\LocalPakage": {},
-        "D:\\PRN_WPF\\PRN212_FA24_PE_TranGiaThinh\\Candidate_BusinessObjects\\bin": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4700,7 +4703,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
