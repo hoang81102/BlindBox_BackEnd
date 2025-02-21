@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = DAO
-build_property.ProjectDir = E:\ProJectSWD392\BlindBoxSS.API\DAO\
+build_property.ProjectDir = D:\Ky7\SWD392\BE\BlindBox_BackEnd\DAO\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

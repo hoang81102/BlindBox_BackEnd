@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Models;
+using Repositories.UnitOfWork;
 using Services;
 using Services.AccountService;
 using Services.Email;
@@ -131,8 +132,10 @@ builder.Services.AddAuthorization(options =>
 // Adding Services  
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 
 

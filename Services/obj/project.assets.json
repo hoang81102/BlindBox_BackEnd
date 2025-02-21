@@ -4832,11 +4832,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\Services.csproj",
+      "projectUniqueName": "D:\\Ky7\\SWD392\\BE\\BlindBox_BackEnd\\Services\\Services.csproj",
       "projectName": "Services",
-      "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\Services.csproj",
+      "projectPath": "D:\\Ky7\\SWD392\\BE\\BlindBox_BackEnd\\Services\\Services.csproj",
       "packagesPath": "C:\\Users\\thinh\\.nuget\\packages\\",
-      "outputPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\obj\\",
+      "outputPath": "D:\\Ky7\\SWD392\\BE\\BlindBox_BackEnd\\Services\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\thinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -4856,8 +4856,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\Repositories.csproj": {
-              "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\Repositories.csproj"
+            "D:\\Ky7\\SWD392\\BE\\BlindBox_BackEnd\\Repositories\\Repositories.csproj": {
+              "projectPath": "D:\\Ky7\\SWD392\\BE\\BlindBox_BackEnd\\Repositories\\Repositories.csproj"
             }
           }
         }

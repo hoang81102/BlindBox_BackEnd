@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Models;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Models
+public class Cart
 {
-    public class Cart
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CartId { get; set; }
+   
+    [Key]
+    public Guid CartId { get; set; } = Guid.NewGuid();
 
-        [Required]
-        public int AccountId { get; set; }
+    public int? BlindBoxId { get; set; }
+    public BlindBox? BlindBox { get; set; }
 
-        public virtual Account? Account { get; set; }
+    public int? PackageId { get; set; }
+    public Package? Package { get; set; }
 
-        public virtual ICollection<CartDetail>? CartDetails { get; set; }
-    }
+    public int Quantity { get; set; }
+
+    public DateTime CreateDate { get; set; } = DateTime.UtcNow;
+
+    public string UserId { get; set; }
+    public virtual ApplicationUser? applicationUser { get; set; }
 }
