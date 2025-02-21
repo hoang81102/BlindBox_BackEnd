@@ -32,6 +32,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "UpdateCartItemQuantity",
+    "RelativePath": "api/Cart/update-quantity",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Services.DTO.UpdateCartItemDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
     "Method": "ConfirmEmail",
     "RelativePath": "api/confirm-email",

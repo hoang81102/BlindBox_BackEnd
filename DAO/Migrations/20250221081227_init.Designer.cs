@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAO.Migrations
 {
     [DbContext(typeof(BlindBoxDbContext))]
-    [Migration("20250213140527_RoleBased")]
-    partial class RoleBased
+    [Migration("20250221081227_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,44 @@ namespace DAO.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Cart", b =>
+                {
+                    b.Property<Guid>("CartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("BlindBoxId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PackageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("applicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CartId");
+
+                    b.HasIndex("BlindBoxId");
+
+                    b.HasIndex("PackageId")
+                        .IsUnique()
+                        .HasFilter("[PackageId] IS NOT NULL");
+
+                    b.HasIndex("applicationUserId");
+
+                    b.ToTable("Carts");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -164,47 +202,6 @@ namespace DAO.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Models.Account", b =>
-                {
-                    b.Property<int>("AccountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountId"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("IsVerify")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("AccountId");
-
-                    b.ToTable("Accounts");
-                });
-
             modelBuilder.Entity("Models.Address", b =>
                 {
                     b.Property<int>("AddressId")
@@ -212,9 +209,6 @@ namespace DAO.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
 
                     b.Property<string>("AddressLine1")
                         .IsRequired()
@@ -254,8 +248,6 @@ namespace DAO.Migrations
 
                     b.HasKey("AddressId");
 
-                    b.HasIndex("AccountId");
-
                     b.ToTable("Address");
                 });
 
@@ -294,6 +286,10 @@ namespace DAO.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -309,7 +305,6 @@ namespace DAO.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
@@ -317,7 +312,6 @@ namespace DAO.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -421,58 +415,6 @@ namespace DAO.Migrations
                     b.ToTable("BlindBoxes");
                 });
 
-            modelBuilder.Entity("Models.Cart", b =>
-                {
-                    b.Property<int>("CartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartId");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("Carts");
-                });
-
-            modelBuilder.Entity("Models.CartDetail", b =>
-                {
-                    b.Property<int>("CartDetailId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartDetailId"));
-
-                    b.Property<int>("BlindBoxId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PackageId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartDetailId");
-
-                    b.HasIndex("BlindBoxId");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("PackageId");
-
-                    b.ToTable("CartDetail");
-                });
-
             modelBuilder.Entity("Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -508,9 +450,6 @@ namespace DAO.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CartId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -520,8 +459,6 @@ namespace DAO.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("PackageId");
-
-                    b.HasIndex("CartId");
 
                     b.HasIndex("CategoryId");
 
@@ -549,6 +486,27 @@ namespace DAO.Migrations
                     b.HasIndex("PackageId");
 
                     b.ToTable("PackageImages");
+                });
+
+            modelBuilder.Entity("Cart", b =>
+                {
+                    b.HasOne("Models.BlindBox", "BlindBox")
+                        .WithMany()
+                        .HasForeignKey("BlindBoxId");
+
+                    b.HasOne("Models.Package", "Package")
+                        .WithOne("Cart")
+                        .HasForeignKey("Cart", "PackageId");
+
+                    b.HasOne("Models.ApplicationUser", "applicationUser")
+                        .WithMany()
+                        .HasForeignKey("applicationUserId");
+
+                    b.Navigation("BlindBox");
+
+                    b.Navigation("Package");
+
+                    b.Navigation("applicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -602,68 +560,13 @@ namespace DAO.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Models.Address", b =>
-                {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany("Address")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("Models.Cart", b =>
-                {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("Models.CartDetail", b =>
-                {
-                    b.HasOne("Models.BlindBox", "BlindBox")
-                        .WithMany()
-                        .HasForeignKey("BlindBoxId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Cart", "Cart")
-                        .WithMany("CartDetails")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Package", "Package")
-                        .WithMany()
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BlindBox");
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Package");
-                });
-
             modelBuilder.Entity("Models.Package", b =>
                 {
-                    b.HasOne("Models.Cart", "Cart")
-                        .WithMany()
-                        .HasForeignKey("CartId");
-
                     b.HasOne("Models.Category", "Category")
                         .WithMany("Packages")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Cart");
 
                     b.Navigation("Category");
                 });
@@ -679,16 +582,6 @@ namespace DAO.Migrations
                     b.Navigation("Package");
                 });
 
-            modelBuilder.Entity("Models.Account", b =>
-                {
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("Models.Cart", b =>
-                {
-                    b.Navigation("CartDetails");
-                });
-
             modelBuilder.Entity("Models.Category", b =>
                 {
                     b.Navigation("Packages");
@@ -696,6 +589,8 @@ namespace DAO.Migrations
 
             modelBuilder.Entity("Models.Package", b =>
                 {
+                    b.Navigation("Cart");
+
                     b.Navigation("Images");
                 });
 #pragma warning restore 612, 618

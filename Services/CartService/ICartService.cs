@@ -10,6 +10,9 @@ namespace Services
     public interface ICartService
     {
         Task AddToCart(CartDTO cartDto);
-        Task<IEnumerable<Cart>> GetCartByUserId(string userId);
+       Task<IEnumerable<Cart>> GetCartByUserId(string userId);
+        Task<bool> UpdateCartItemQuantity(Guid cartId, string userId, int quantity);
+
+
     }
 }

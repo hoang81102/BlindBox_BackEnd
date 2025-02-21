@@ -46,5 +46,31 @@ namespace BlindBoxSS.API.Controllers
                 return BadRequest(new { Error = ex.Message });
             }
         }
+
+        [HttpPut("update-quantity")]
+        public async Task<IActionResult> UpdateCartItemQuantity([FromBody] UpdateCartItemDTO model)
+        {
+            try
+            {
+                bool result = await _cartService.UpdateCartItemQuantity(model.CartId, model.UserId, model.Quantity);
+                if (result)
+                    return Ok(new { message = "Cart item updated successfully." });
+                else
+                    return BadRequest(new { message = "Failed to update cart item." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "An error occurred.", error = ex.Message });
+            }
+        }
+
     }
-   }
+}

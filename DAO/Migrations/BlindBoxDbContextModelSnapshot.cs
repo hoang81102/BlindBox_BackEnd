@@ -24,11 +24,9 @@ namespace DAO.Migrations
 
             modelBuilder.Entity("Cart", b =>
                 {
-                    b.Property<int>("CartId")
+                    b.Property<Guid>("CartId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int?>("BlindBoxId")
                         .HasColumnType("int");
