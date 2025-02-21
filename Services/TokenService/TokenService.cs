@@ -25,10 +25,10 @@ namespace Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<TokenService> _logger;
 
-        public TokenService( IConfiguration configuration, UserManager<ApplicationUser> userManager)
+        public TokenService(IConfiguration configuration, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
-            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings> ();
+            var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
             if (jwtSettings == null || string.IsNullOrEmpty(jwtSettings.Key))
             {
                 throw new InvalidOperationException("JWT secret key is not configured.");
@@ -42,9 +42,9 @@ namespace Services
         }
 
 
-        public async Task<string> GenerateToken(ApplicationUser user)            
+        public async Task<string> GenerateToken(ApplicationUser user)
         {
-            var signingCredentials = new SigningCredentials(_secretKey,SecurityAlgorithms.HmacSha256);
+            var signingCredentials = new SigningCredentials(_secretKey, SecurityAlgorithms.HmacSha256);
             var claims = await GetClaimsAsync(user);
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
@@ -57,7 +57,7 @@ namespace Services
                 new Claim("UserName", user?.UserName ?? string.Empty),
                 new Claim("AccountId", user.Id),
                 new Claim(ClaimTypes.Email,user.Email),
-                new Claim("FirstName",user.FirstName),  
+                new Claim("FirstName",user.FirstName),
                 new Claim("LastName", user.LastName),
                 new Claim("Gender",user.Gender),
             };
@@ -69,14 +69,14 @@ namespace Services
             return claims;
         }
 
-        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims) 
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             return new JwtSecurityToken(
-            
-                issuer:_validIssuer,
-                audience:_validAudience,
-                claims:claims,
-                expires:DateTime.Now.AddMinutes(_expires),
+
+                issuer: _validIssuer,
+                audience: _validAudience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(_expires),
                 signingCredentials: signingCredentials
                  );
         }
@@ -91,6 +91,6 @@ namespace Services
 
         }
 
-    
+
     }
 }

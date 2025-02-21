@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Mj5ZGQVxkDo=",
+  "dgSpecHash": "6TLwIx5puws=",
   "success": true,
-  "projectFilePath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj",
+  "projectFilePath": "D:\\Ky7\\SWD392\\BE\\BlindBox_BackEnd\\Models\\Models.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\thinh\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\thinh\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",

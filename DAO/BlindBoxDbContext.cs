@@ -27,8 +27,6 @@ namespace DAO
 
         public DbSet<Cart> Carts { get; set; }
 
-        public DbSet<CartDetail> CartDetail { get; set; }
-
         public DbSet<Package> Packages { get; set; }
 
         public DbSet<PackageImage> PackageImages { get; set; }
