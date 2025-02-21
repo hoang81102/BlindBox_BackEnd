@@ -321,7 +321,7 @@ namespace Services.AccountService
                     UserName = googleId,
                     FirstName = payload.Name ?? "Unknown",
                     LastName = "",
-                    FullName = name,
+                    //FullName = name,
                     Gender = "Not Specified",
                     PhoneNumber = "Unknown",
                     Address = "Not Provided",

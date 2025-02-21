@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "E:\\ProJectSWD392\\BlindBoxSS.API\\BlindBoxSS.API\\BlindBoxSS.API.csproj": {}
+    "G:\\BlindBox_BackEnd\\BlindBoxSS.API\\BlindBoxSS.API.csproj": {}
   },
   "projects": {
-    "E:\\ProJectSWD392\\BlindBoxSS.API\\BlindBoxSS.API\\BlindBoxSS.API.csproj": {
+    "G:\\BlindBox_BackEnd\\BlindBoxSS.API\\BlindBoxSS.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProJectSWD392\\BlindBoxSS.API\\BlindBoxSS.API\\BlindBoxSS.API.csproj",
+        "projectUniqueName": "G:\\BlindBox_BackEnd\\BlindBoxSS.API\\BlindBoxSS.API.csproj",
         "projectName": "BlindBoxSS.API",
-        "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\BlindBoxSS.API\\BlindBoxSS.API.csproj",
-        "packagesPath": "C:\\Users\\thinh\\.nuget\\packages\\",
-        "outputPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\BlindBoxSS.API\\obj\\",
+        "projectPath": "G:\\BlindBox_BackEnd\\BlindBoxSS.API\\BlindBoxSS.API.csproj",
+        "packagesPath": "C:\\Users\\mzgpc\\.nuget\\packages\\",
+        "outputPath": "G:\\BlindBox_BackEnd\\BlindBoxSS.API\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\thinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mzgpc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -23,16 +27,14 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\LocalPakage": {},
-          "D:\\PRN_WPF\\PRN212_FA24_PE_TranGiaThinh\\Candidate_BusinessObjects\\bin": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\Services.csproj": {
-                "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\Services.csproj"
+              "G:\\BlindBox_BackEnd\\Services\\Services.csproj": {
+                "projectPath": "G:\\BlindBox_BackEnd\\Services\\Services.csproj"
               }
             }
           }
@@ -46,7 +48,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -100,21 +103,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\ProJectSWD392\\BlindBoxSS.API\\DAO\\DAO.csproj": {
+    "G:\\BlindBox_BackEnd\\DAO\\DAO.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProJectSWD392\\BlindBoxSS.API\\DAO\\DAO.csproj",
+        "projectUniqueName": "G:\\BlindBox_BackEnd\\DAO\\DAO.csproj",
         "projectName": "DAO",
-        "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\DAO\\DAO.csproj",
-        "packagesPath": "C:\\Users\\thinh\\.nuget\\packages\\",
-        "outputPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\DAO\\obj\\",
+        "projectPath": "G:\\BlindBox_BackEnd\\DAO\\DAO.csproj",
+        "packagesPath": "C:\\Users\\mzgpc\\.nuget\\packages\\",
+        "outputPath": "G:\\BlindBox_BackEnd\\DAO\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\thinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mzgpc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -123,16 +130,14 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\LocalPakage": {},
-          "D:\\PRN_WPF\\PRN212_FA24_PE_TranGiaThinh\\Candidate_BusinessObjects\\bin": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj": {
-                "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj"
+              "G:\\BlindBox_BackEnd\\Models\\Models.csproj": {
+                "projectPath": "G:\\BlindBox_BackEnd\\Models\\Models.csproj"
               }
             }
           }
@@ -146,7 +151,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -184,21 +190,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj": {
+    "G:\\BlindBox_BackEnd\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj",
+        "projectUniqueName": "G:\\BlindBox_BackEnd\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\Models.csproj",
-        "packagesPath": "C:\\Users\\thinh\\.nuget\\packages\\",
-        "outputPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Models\\obj\\",
+        "projectPath": "G:\\BlindBox_BackEnd\\Models\\Models.csproj",
+        "packagesPath": "C:\\Users\\mzgpc\\.nuget\\packages\\",
+        "outputPath": "G:\\BlindBox_BackEnd\\Models\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\thinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mzgpc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -207,8 +217,6 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\LocalPakage": {},
-          "D:\\PRN_WPF\\PRN212_FA24_PE_TranGiaThinh\\Candidate_BusinessObjects\\bin": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -226,7 +234,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -291,21 +300,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\Repositories.csproj": {
+    "G:\\BlindBox_BackEnd\\Repositories\\Repositories.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\Repositories.csproj",
+        "projectUniqueName": "G:\\BlindBox_BackEnd\\Repositories\\Repositories.csproj",
         "projectName": "Repositories",
-        "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\Repositories.csproj",
-        "packagesPath": "C:\\Users\\thinh\\.nuget\\packages\\",
-        "outputPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\obj\\",
+        "projectPath": "G:\\BlindBox_BackEnd\\Repositories\\Repositories.csproj",
+        "packagesPath": "C:\\Users\\mzgpc\\.nuget\\packages\\",
+        "outputPath": "G:\\BlindBox_BackEnd\\Repositories\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\thinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mzgpc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -314,16 +327,14 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\LocalPakage": {},
-          "D:\\PRN_WPF\\PRN212_FA24_PE_TranGiaThinh\\Candidate_BusinessObjects\\bin": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\ProJectSWD392\\BlindBoxSS.API\\DAO\\DAO.csproj": {
-                "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\DAO\\DAO.csproj"
+              "G:\\BlindBox_BackEnd\\DAO\\DAO.csproj": {
+                "projectPath": "G:\\BlindBox_BackEnd\\DAO\\DAO.csproj"
               }
             }
           }
@@ -337,7 +348,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -374,21 +386,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\Services.csproj": {
+    "G:\\BlindBox_BackEnd\\Services\\Services.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\Services.csproj",
+        "projectUniqueName": "G:\\BlindBox_BackEnd\\Services\\Services.csproj",
         "projectName": "Services",
-        "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\Services.csproj",
-        "packagesPath": "C:\\Users\\thinh\\.nuget\\packages\\",
-        "outputPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Services\\obj\\",
+        "projectPath": "G:\\BlindBox_BackEnd\\Services\\Services.csproj",
+        "packagesPath": "C:\\Users\\mzgpc\\.nuget\\packages\\",
+        "outputPath": "G:\\BlindBox_BackEnd\\Services\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\thinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mzgpc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -397,16 +413,14 @@
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
-          "D:\\LocalPakage": {},
-          "D:\\PRN_WPF\\PRN212_FA24_PE_TranGiaThinh\\Candidate_BusinessObjects\\bin": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\Repositories.csproj": {
-                "projectPath": "E:\\ProJectSWD392\\BlindBoxSS.API\\Repositories\\Repositories.csproj"
+              "G:\\BlindBox_BackEnd\\Repositories\\Repositories.csproj": {
+                "projectPath": "G:\\BlindBox_BackEnd\\Repositories\\Repositories.csproj"
               }
             }
           }
@@ -420,7 +434,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -439,6 +454,10 @@
             "MimeKit": {
               "target": "Package",
               "version": "[4.10.0, )"
+            },
+            "payOS": {
+              "target": "Package",
+              "version": "[1.0.9, )"
             }
           },
           "imports": [
@@ -457,7 +476,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

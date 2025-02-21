@@ -1,5 +1,15 @@
 [
   {
+    "ContainingType": "BlindBoxSS.API.Controllers.AdminController",
+    "Method": "GetAllUsers",
+    "RelativePath": "api/Admin/GetAllUsers",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
     "Method": "ConfirmEmail",
     "RelativePath": "api/confirm-email",
@@ -73,6 +83,70 @@
       {
         "Name": "request",
         "Type": "DAO.Contracts.UserRequestAndResponse\u002BUserLoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.PaymentController",
+    "Method": "GetOrder",
+    "RelativePath": "api/Payment/{orderId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.PaymentController",
+    "Method": "ConfirmWebhook",
+    "RelativePath": "api/Payment/confirm-webhook",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "body",
+        "Type": "NetCoreDemo.Types.ConfirmWebhook",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.PaymentController",
+    "Method": "CreatePaymentLink",
+    "RelativePath": "api/Payment/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "body",
+        "Type": "NetCoreDemo.Types.CreatePaymentLinkRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.PaymentController",
+    "Method": "payOSTransferHandler",
+    "RelativePath": "api/Payment/payos_transfer_handler",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "body",
+        "Type": "Net.payOS.Types.WebhookType",
         "IsRequired": true
       }
     ],

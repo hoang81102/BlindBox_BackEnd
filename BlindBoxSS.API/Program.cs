@@ -1,37 +1,37 @@
-﻿using BlindBoxSS.API;
-using BlindBoxSS.API.Exceptions;
+﻿using BlindBoxSS.API.Exceptions;
 using BlindBoxSS.API.Extensions;
-using DAO;
+using BlindBoxSS.API;
 using DAO.Mapping;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DAO;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Models;
-using Services;
+using Net.payOS;
 using Services.AccountService;
 using Services.Email;
-using System.Text;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
+IConfiguration configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+PayOS payOS = new PayOS(configuration["PaymentEnvironment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find payment environment"),
+                    configuration["PaymentEnvironment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find payment environment"),
+                    configuration["PaymentEnvironment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find payment environment"));
 
+builder.Services.AddSingleton(payOS);
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
-
-
-//Add DB
+// Add DB
 builder.Services.AddDbContext<BlindBoxDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -47,12 +47,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 // Adding Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlindBoxSS API", Version = "v1", Description = "Services to BlindBox Sale Website" });
-
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -83,33 +81,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//Set up Email Sender
+// Set up Email Sender
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-//// Cấu hình Google OAuth
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//})
-//.AddCookie()
-//.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-//{
-//    options.ClientId = builder.Configuration["Google:ClientId"];
-//    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-//    options.CallbackPath = "/"; // Phải trùng với Google Cloud
-//});
-
-
-
-
-
-
-
-//builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-//    .AddEntityFrameworkStores<BlindBoxDbContext>()
-//    .AddDefaultTokenProviders();
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.SignIn.RequireConfirmedEmail = true; // 🚀 Yêu cầu email phải được xác thực mới cho đăng nhập
@@ -118,15 +92,11 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddSignInManager()
 .AddDefaultTokenProviders(); // 🚀 Cần thiết để tạo token xác thực email
 
-
-
-
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
 });
-
 
 // Adding Services  
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -134,20 +104,13 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-
-
-
-// Regsitering AutoMapper
+// Registering AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
-
 
 // Adding Jwt from extension method
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJwt(builder.Configuration);
 builder.Services.ConfigureCors();
-
-
-
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -159,7 +122,7 @@ app.UseCors("CorsPolicy");
 // Sử dụng CORS
 app.UseCors("AllowAll");
 
-// cau hinh Role va t?o tài kho?n account m?c ??nh n?u ch?a có. (T?c là Ch?y hàm trong SeedRoles)
+// Configure Role and create default account if not exist. (Run the function in SeedRoles)
 var scope = app.Services.CreateScope();
 await SeedRoles.InitializeRoles(scope.ServiceProvider);
 
@@ -170,7 +133,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// x? lý l?i 403
+// Handle 403 errors
 app.Use(async (context, next) =>
 {
     await next();
@@ -178,12 +141,9 @@ app.Use(async (context, next) =>
     if (context.Response.StatusCode == StatusCodes.Status403Forbidden)
     {
         context.Response.ContentType = "application/json";
-        await context.Response.WriteAsync("{ \"message\": \"You dont have permission for this action. Pls Login With Admin Account\" }");
+        await context.Response.WriteAsync("{ \"message\": \"You don't have permission for this action. Please login with an Admin account.\" }");
     }
 });
-
-
-
 
 app.UseHttpsRedirection();
 
