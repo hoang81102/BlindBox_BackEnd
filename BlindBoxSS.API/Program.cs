@@ -87,37 +87,13 @@ builder.Services.AddSwaggerGen(c =>
 //Set up Email Sender
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-//// Cấu hình Google OAuth
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//})
-//.AddCookie()
-//.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-//{
-//    options.ClientId = builder.Configuration["Google:ClientId"];
-//    options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-//    options.CallbackPath = "/"; // Phải trùng với Google Cloud
-//});
-
-
-
-
-
-
-
-//builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-//    .AddEntityFrameworkStores<BlindBoxDbContext>()
-//    .AddDefaultTokenProviders();
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
-    options.SignIn.RequireConfirmedEmail = true; // 🚀 Yêu cầu email phải được xác thực mới cho đăng nhập
+    options.SignIn.RequireConfirmedEmail = true; 
 })
 .AddEntityFrameworkStores<BlindBoxDbContext>()
 .AddSignInManager()
-.AddDefaultTokenProviders(); // 🚀 Cần thiết để tạo token xác thực email
+.AddDefaultTokenProviders(); 
 
 
 

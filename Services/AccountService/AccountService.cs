@@ -354,6 +354,32 @@ namespace Services.AccountService
             return userResponse;
         }
 
+        public async Task<IEnumerable<UserDTO>> GetAllAccountsAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return users.Select(user => _mapper.Map<UserDTO>(user));
+        }
+        public async Task<UserDTO> AdminUpdateAsync(Guid id, UpdateUserRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                _logger.LogError("User not found");
+                throw new Exception("User not found");
+            }
+
+            user.UpdateAt = DateTime.Now;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.Gender = request.Gender;
+
+            await _userManager.UpdateAsync(user);
+            return _mapper.Map<UserDTO>(user);
+        }
+
+
+
     }
 
 }

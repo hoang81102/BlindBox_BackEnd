@@ -12,6 +12,7 @@ namespace DAO.Mapping
             CreateMap<ApplicationUser, UserResponse>();
             CreateMap<ApplicationUser, CurrentUserResponse>();
             CreateMap<UserRegisterRequest, ApplicationUser>();
+            CreateMap<ApplicationUser, UserDTO>();
 
         }
     }

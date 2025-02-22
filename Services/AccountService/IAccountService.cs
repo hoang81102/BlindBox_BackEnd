@@ -25,5 +25,10 @@ namespace Services.AccountService
         //Send Email
         //Task<bool> ConfirmEmailAsync(string userId, string token);
         Task<bool> ResendConfirmationEmailAsync(string email);
+
+        Task<IEnumerable<UserDTO>> GetAllAccountsAsync();
+        Task<UserDTO> AdminUpdateAsync(Guid id, UpdateUserRequest request);
+
+
     }
 }

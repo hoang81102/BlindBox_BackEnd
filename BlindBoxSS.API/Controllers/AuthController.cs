@@ -274,9 +274,36 @@ namespace BlindBoxSS.API.Controllers
 
         }
 
-
-
+        [HttpGet("GetAll")]
+        [Authorize("AdminPolicy")]
+        public async Task<IActionResult> GetAllAccounts()
+        {
+            var accounts = await _accountService.GetAllAccountsAsync();
+            return Ok(accounts);
         }
+
+        [HttpPut("{id}")]
+        [Authorize("AdminPolicy")]
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid request data.");
+            }
+
+            try
+            {
+                var updatedUser = await _accountService.AdminUpdateAsync(id, request);
+                return Ok(updatedUser);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+
+    }
     }
 
 
