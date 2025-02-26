@@ -1,20 +1,18 @@
 ﻿using DAO.Contracts;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
+
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services.AccountService;
 using Services.Email;
-using System.Web;
+
 using static DAO.Contracts.UserRequestAndResponse;
-using System.Security.Claims;
-using Google.Apis.Auth;
+
 using Services.Request;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Services.DTO;
+
 
 namespace BlindBoxSS.API.Controllers
 {
@@ -37,7 +35,7 @@ namespace BlindBoxSS.API.Controllers
             _userManager = userManager;
             _emailService = emailService;
             _signInManager = signInManager;
-            
+
         }
 
         /// <summary>
@@ -63,7 +61,8 @@ namespace BlindBoxSS.API.Controllers
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
             var response = await _accountService.LoginAsync(request);
-            if (response == null) {
+            if (response == null)
+            {
                 return Unauthorized(new ErrorResponse
                 {
                     Title = "Email Not Confirmed",
@@ -118,18 +117,6 @@ namespace BlindBoxSS.API.Controllers
         }
 
         /// <summary>
-        /// Gets the current user.
-        /// </summary>
-        /// <returns>An <see cref="IActionResult"/> representing the result of the operation.</returns>
-        [HttpGet("current-user")]
-        [Authorize]
-        public async Task<IActionResult> GetCurrentUser()
-        {
-            var response = await _accountService.GetCurrentUserAsync();
-            return Ok(response);
-        }
-
-        /// <summary>
         /// Deletes a user.
         /// </summary>
         /// <param name="id">The ID of the user to be deleted.</param>
@@ -144,6 +131,7 @@ namespace BlindBoxSS.API.Controllers
 
 
         [HttpGet("confirm-email")]
+        [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
@@ -286,7 +274,36 @@ namespace BlindBoxSS.API.Controllers
 
         }
 
-        
+        [HttpGet("GetAll")]
+        [Authorize("AdminPolicy")]
+        public async Task<IActionResult> GetAllAccounts()
+        {
+            var accounts = await _accountService.GetAllAccountsAsync();
+            return Ok(accounts);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize("AdminPolicy")]
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid request data.");
+            }
+
+            try
+            {
+                var updatedUser = await _accountService.AdminUpdateAsync(id, request);
+                return Ok(updatedUser);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
 
     }
-}
+    }
+
+

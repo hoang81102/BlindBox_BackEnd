@@ -56,6 +56,16 @@
 
         }
 
+        public class UserDTO
+        {
+            public Guid Id { get; set; }
+            public string Email { get; set; }
+            public string Gender { get; set; }
+            public string? PhoneNumber { get; set; } 
+            public DateTime CreateAt { get; set; }
+            public DateTime UpdateAt { get; set; }
+            public string Address { get; set; }
+        }
         public class UserLoginRequest
         {
             public string Email { get; set; }

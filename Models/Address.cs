@@ -15,9 +15,6 @@ namespace Models
         public int AddressId { get; set; }
 
         [Required]
-        public int AccountId { get; set; }
-
-        [Required]
         [StringLength(255)]
         public string AddressLine1 { get; set; }
 

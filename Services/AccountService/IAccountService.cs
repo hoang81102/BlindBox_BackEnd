@@ -11,7 +11,6 @@ namespace Services.AccountService
     public interface IAccountService
     {
         Task<UserResponse> RegisterAsync(UserRegisterRequest request);
-        Task<CurrentUserResponse> GetCurrentUserAsync();
         Task<UserResponse> GetByIdAsync(Guid id);
         Task<UserResponse> UpdateAsync(Guid id, UpdateUserRequest request);
         Task DeleteAsync(Guid id);
@@ -29,5 +28,10 @@ namespace Services.AccountService
 
         //Create Wallet
         Task CreateWalletForUserAsync(string accountId);
+
+        Task<IEnumerable<UserDTO>> GetAllAccountsAsync();
+        Task<UserDTO> AdminUpdateAsync(Guid id, UpdateUserRequest request);
+
+
     }
 }

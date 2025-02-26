@@ -30,17 +30,16 @@ namespace Services.AccountService
     public class AccountService : IAccountService
     {
         private readonly ITokenService _tokenService;
-        private readonly ICurrentUserService _currentUserService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly ILogger<AccountService> _logger;
         private readonly IEmailService _emailService;
         private readonly IWalletRepository _walletRepository;
 
-        public AccountService(ITokenService tokenService, ICurrentUserService currentUserService, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<AccountService> logger, IEmailService emailService, IWalletRepository walletRepository)
+
+        public AccountService(ITokenService tokenService, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<AccountService> logger, IEmailService emailService, IWalletRepository walletRepository)
         {
             _tokenService = tokenService;
-            _currentUserService = currentUserService;
             _userManager = userManager;
             _mapper = mapper;
             _logger = logger;
@@ -51,11 +50,9 @@ namespace Services.AccountService
 
         public async Task<UserResponse> RegisterAsync(UserRegisterRequest request)
         {
-            _logger.LogInformation("Registering user");
             var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser != null)
             {
-                _logger.LogError("Email already exists");
                 throw new Exception("Email already exists");
             }
 
@@ -70,17 +67,12 @@ namespace Services.AccountService
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                _logger.LogError("Failed to create user: {errors}", errors);
                 throw new Exception($"Failed to create user: {errors}");
             }
-
             // 🚀 Tạo token xác thực email
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-            
 
             await  _emailService.SendConfirmationEmailAsync(newUser, token);
-
-            _logger.LogInformation("User created successfully");
             await _tokenService.GenerateToken(newUser);
             newUser.CreateAt = DateTime.Now;
             newUser.UpdateAt = DateTime.Now;
@@ -176,17 +168,6 @@ namespace Services.AccountService
             }
             _logger.LogInformation("User found");
             return _mapper.Map<UserResponse>(user);
-        }
-
-        public async Task<CurrentUserResponse> GetCurrentUserAsync()
-        {
-            var user = await _userManager.FindByIdAsync(_currentUserService.GetUserId());
-            if (user == null)
-            {
-                _logger.LogError("User not found");
-                throw new Exception("User not found");
-            }
-            return _mapper.Map<CurrentUserResponse>(user);
         }
 
         public async Task<CurrentUserResponse> RefreshTokenAsync(RefreshTokenRequest request)
@@ -336,7 +317,6 @@ namespace Services.AccountService
                     UserName = googleId,
                     FirstName = payload.Name ?? "Unknown",
                     LastName = "",
-                    //FullName = name,
                     Gender = "Not Specified",
                     PhoneNumber = "Unknown",
                     Address = "Not Provided",
@@ -371,9 +351,9 @@ namespace Services.AccountService
             using var sha256 = SHA256.Create();
             var refreshTokenHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(refreshToken));
             user.RefreshToken = Convert.ToBase64String(refreshTokenHash);
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);  // Use UtcNow instead of Now
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);  
 
-            // Update user information in database
+      
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
@@ -389,6 +369,32 @@ namespace Services.AccountService
 
             return userResponse;
         }
+
+        public async Task<IEnumerable<UserDTO>> GetAllAccountsAsync()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return users.Select(user => _mapper.Map<UserDTO>(user));
+        }
+        public async Task<UserDTO> AdminUpdateAsync(Guid id, UpdateUserRequest request)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                _logger.LogError("User not found");
+                throw new Exception("User not found");
+            }
+
+            user.UpdateAt = DateTime.Now;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Email = request.Email;
+            user.Gender = request.Gender;
+
+            await _userManager.UpdateAsync(user);
+            return _mapper.Map<UserDTO>(user);
+        }
+
+
 
     }
 

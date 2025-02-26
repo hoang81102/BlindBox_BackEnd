@@ -1,5 +1,26 @@
 [
   {
+    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "DAO.Contracts.UserRequestAndResponse\u002BUpdateUserRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BlindBoxSS.API.Controllers.AdminController",
     "Method": "GetAllUsers",
     "RelativePath": "api/Admin/GetAllUsers",
@@ -119,6 +140,70 @@
     ]
   },
   {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "AddToCart",
+    "RelativePath": "api/Cart/add-to-cart",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartDto",
+        "Type": "Services.DTO.CartDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "DeleteCartItem",
+    "RelativePath": "api/Cart/delete-cart/{cartId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "GetCartByUserId",
+    "RelativePath": "api/Cart/get-cart/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "UpdateCartItemQuantity",
+    "RelativePath": "api/Cart/update-quantity",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Services.DTO.UpdateCartItemDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
     "Method": "ConfirmEmail",
     "RelativePath": "api/confirm-email",
@@ -141,16 +226,6 @@
   },
   {
     "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
-    "Method": "GetCurrentUser",
-    "RelativePath": "api/current-user",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
     "Method": "ForgotPassword",
     "RelativePath": "api/forgot-password",
     "HttpMethod": "POST",
@@ -163,6 +238,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "Method": "GetAllAccounts",
+    "RelativePath": "api/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
