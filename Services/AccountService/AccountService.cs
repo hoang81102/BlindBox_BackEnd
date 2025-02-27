@@ -1,29 +1,15 @@
 ﻿using AutoMapper;
-using Azure.Messaging;
-using Repositories;
-using DAO.Contracts;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Models;
-using Repositories.UnitOfWork;
+using Repositories.WalletRepo;
 using Services.Email;
 using Services.Request;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using static DAO.Contracts.UserRequestAndResponse;
-using Repositories.WalletRepo;
 
 namespace Services.AccountService
 {
@@ -72,7 +58,7 @@ namespace Services.AccountService
             // 🚀 Tạo token xác thực email
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
-            await  _emailService.SendConfirmationEmailAsync(newUser, token);
+            await _emailService.SendConfirmationEmailAsync(newUser, token);
             await _tokenService.GenerateToken(newUser);
             newUser.CreateAt = DateTime.Now;
             newUser.UpdateAt = DateTime.Now;
@@ -325,6 +311,7 @@ namespace Services.AccountService
                 };
 
                 var createResult = await _userManager.CreateAsync(user);
+                await CreateWalletForUserAsync(user.Id);
                 if (!createResult.Succeeded)
                 {
                     var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
@@ -351,9 +338,9 @@ namespace Services.AccountService
             using var sha256 = SHA256.Create();
             var refreshTokenHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(refreshToken));
             user.RefreshToken = Convert.ToBase64String(refreshTokenHash);
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);  
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);
 
-      
+
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {

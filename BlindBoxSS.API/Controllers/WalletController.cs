@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BlindBoxSS.API.Services;
-using Microsoft.Extensions.Logging;
+﻿using BlindBoxSS.API.Services;
+using Microsoft.AspNetCore.Mvc;
 using Services.Wallet;
-using Models;
 
 namespace BlindBoxSS.API.Controllers
 {
@@ -14,7 +12,7 @@ namespace BlindBoxSS.API.Controllers
         private readonly IWalletTransactionService _walletTransactionService;
         private readonly ILogger<WalletController> _logger;
 
-        public WalletController(IWalletService walletService, IWalletTransactionService walletTransactionService,ILogger<WalletController> logger)
+        public WalletController(IWalletService walletService, IWalletTransactionService walletTransactionService, ILogger<WalletController> logger)
         {
             _walletService = walletService;
             _walletTransactionService = walletTransactionService;
@@ -83,5 +81,8 @@ namespace BlindBoxSS.API.Controllers
                 return BadRequest(new { Message = "An error occurred while processing your request. Please try again later." });
             }
         }
+
+        /*[HttpPost("purchaseDirectly")]
+        public async Task<IActionResult> PurchaseV2([FromQuery] string accountId, [FromQuery] int amount, [FromQuery] int? orderId) { }*/
     }
 }

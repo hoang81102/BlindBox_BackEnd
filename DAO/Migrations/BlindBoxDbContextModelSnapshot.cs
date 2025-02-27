@@ -332,6 +332,10 @@ namespace DAO.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfileImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
@@ -670,6 +674,27 @@ namespace DAO.Migrations
                     b.ToTable("WalletTransaction");
                 });
 
+            modelBuilder.Entity("Cart", b =>
+                {
+                    b.HasOne("Models.BlindBox", "BlindBox")
+                        .WithMany()
+                        .HasForeignKey("BlindBoxId");
+
+                    b.HasOne("Models.Package", "Package")
+                        .WithOne("Cart")
+                        .HasForeignKey("Cart", "PackageId");
+
+                    b.HasOne("Models.ApplicationUser", "applicationUser")
+                        .WithMany()
+                        .HasForeignKey("applicationUserId");
+
+                    b.Navigation("BlindBox");
+
+                    b.Navigation("Package");
+
+                    b.Navigation("applicationUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Models.ApplicationRole", null)
@@ -719,44 +744,6 @@ namespace DAO.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Models.Cart", b =>
-                {
-                    b.HasOne("Models.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("Models.CartDetail", b =>
-                {
-                    b.HasOne("Models.BlindBox", "BlindBox")
-                        .WithMany()
-                        .HasForeignKey("BlindBoxId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Cart", "Cart")
-                        .WithMany("CartDetails")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Package", "Package")
-                        .WithMany()
-                        .HasForeignKey("PackageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BlindBox");
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Package");
                 });
 
             modelBuilder.Entity("Models.Order", b =>
@@ -860,11 +847,6 @@ namespace DAO.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Wallet");
-                });
-
-            modelBuilder.Entity("Models.Cart", b =>
-                {
-                    b.Navigation("CartDetails");
                 });
 
             modelBuilder.Entity("Models.Category", b =>

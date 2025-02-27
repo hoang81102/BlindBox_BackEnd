@@ -39,7 +39,8 @@ namespace BlindBoxSS.API
                     Address = "Thu Duc",
                     EmailConfirmed = true,
                     CreateAt = DateTime.UtcNow,
-                    UpdateAt = DateTime.UtcNow
+                    UpdateAt = DateTime.UtcNow,
+                    ProfileImageUrl = ""
                 };
 
                 var result = await userManager.CreateAsync(adminUser, "Admin@123");
@@ -52,8 +53,8 @@ namespace BlindBoxSS.API
                     }
                 }
 
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
-                
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+
             }
         }
     }
