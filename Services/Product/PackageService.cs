@@ -1,4 +1,5 @@
 ﻿using Models;
+using Repositories.Pagging;
 using Repositories.Product;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,12 @@ namespace Services.Product
         public async Task<IEnumerable<Package>> GetAllPackagesAsync()
         {
             return await _packageRepository.GetAllPackagesAsync();
+        }
+
+        public async Task<PaginatedList<Package>> GetAll(int pageNumber, int pageSize)
+        {
+            IQueryable<Package> packages = _packageRepository.GetAll().AsQueryable();
+            return await PaginatedList<Package>.CreateAsync(packages, pageNumber, pageSize);
         }
 
         public async Task<Package?> GetPackageByIdAsync(int id)

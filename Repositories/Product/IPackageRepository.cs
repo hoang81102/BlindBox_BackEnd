@@ -14,5 +14,7 @@ namespace Repositories.Product
         Task<Package> AddPackageAsync(Package package);
         Task<Package?> UpdatePackageAsync(Package package);
         Task<bool> DeletePackageAsync(int id);
+
+        IQueryable<Package> GetAll();
     }
 }

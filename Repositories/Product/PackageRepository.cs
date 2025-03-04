@@ -18,6 +18,11 @@ namespace Repositories.Product
             _context = context;
         }
 
+        public IQueryable<Package> GetAll()
+        {
+            return _context.Packages.AsQueryable();
+        }
+
         public async Task<IEnumerable<Package>> GetAllPackagesAsync()
         {
             return await _context.Set<Package>().ToListAsync();

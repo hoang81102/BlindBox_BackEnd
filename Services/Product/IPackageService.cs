@@ -1,4 +1,5 @@
 ﻿using Models;
+using Repositories.Pagging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace Services.Product
         Task<Package> AddPackageAsync(Package package);
         Task<Package?> UpdatePackageAsync(Package package);
         Task<bool> DeletePackageAsync(int id);
+
+        Task<PaginatedList<Package>> GetAll(int pageNumber, int pageSize);
     }
 }

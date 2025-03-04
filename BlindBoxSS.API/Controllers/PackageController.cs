@@ -22,6 +22,14 @@ namespace BlindBoxSS.API.Controllers
             return Ok(packages);
         }
 
+
+        [HttpGet("GetAll-paged")]
+        public async Task<IActionResult> GetAllPackages(int pageNumber = 1, int pageSize = 10)
+        {
+            var result = await _packageService.GetAll(pageNumber, pageSize);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPackageById(int id)
         {

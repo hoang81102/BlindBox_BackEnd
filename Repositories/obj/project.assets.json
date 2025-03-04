@@ -4924,23 +4924,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Users\\mzgpc\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Repositories\\Repositories.csproj",
+      "projectUniqueName": "F:\\BlindBox_BackEnd\\Repositories\\Repositories.csproj",
       "projectName": "Repositories",
-      "projectPath": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Repositories\\Repositories.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Repositories\\obj\\",
+      "projectPath": "F:\\BlindBox_BackEnd\\Repositories\\Repositories.csproj",
+      "packagesPath": "C:\\Users\\mzgpc\\.nuget\\packages\\",
+      "outputPath": "F:\\BlindBox_BackEnd\\Repositories\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\mzgpc\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4956,11 +4956,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\DAO\\DAO.csproj": {
-              "projectPath": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\DAO\\DAO.csproj"
+            "F:\\BlindBox_BackEnd\\DAO\\DAO.csproj": {
+              "projectPath": "F:\\BlindBox_BackEnd\\DAO\\DAO.csproj"
             },
-            "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Models\\Models.csproj": {
-              "projectPath": "D:\\FPT-WORK\\SWD392\\BlindBox_BackEnd\\Models\\Models.csproj"
+            "F:\\BlindBox_BackEnd\\Models\\Models.csproj": {
+              "projectPath": "F:\\BlindBox_BackEnd\\Models\\Models.csproj"
             }
           }
         }
@@ -4974,7 +4974,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -5011,7 +5012,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
