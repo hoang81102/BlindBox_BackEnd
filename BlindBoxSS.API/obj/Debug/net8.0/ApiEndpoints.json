@@ -188,6 +188,11 @@
         "Name": "cartId",
         "Type": "System.Guid",
         "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

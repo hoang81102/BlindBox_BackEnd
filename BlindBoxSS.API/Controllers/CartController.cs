@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BlindBoxSS.API.Attributes;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
+using Services.Cache;
 using Services.DTO;
 
 namespace BlindBoxSS.API.Controllers
@@ -10,21 +12,24 @@ namespace BlindBoxSS.API.Controllers
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
+        private readonly IResponseCacheService _responseCacheService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, IResponseCacheService responseCacheService)
         {
             _cartService = cartService;
+            _responseCacheService = responseCacheService;
         }
 
         [HttpPost("add-to-cart")]
         public async Task<IActionResult> AddToCart([FromBody] CartDTO cartDto)
         {
-            if (cartDto == null)
-                return BadRequest("Invalid cart data");
+            if (cartDto == null || string.IsNullOrWhiteSpace(cartDto.UserId))
+                return BadRequest(new { Error = "Invalid cart data: UserId cannot be null or empty" });
 
             try
             {
                 await _cartService.AddToCart(cartDto);
+                await _responseCacheService.RemoveCacheResponseAsync("/api/Cart");  // xoa cache
                 return Ok(new { Message = "Item added to cart successfully" });
             }
             catch (Exception ex)
@@ -34,6 +39,7 @@ namespace BlindBoxSS.API.Controllers
         }
 
         [HttpGet("get-cart/{userId}")]
+        [CacheAttribute(1000)]
         public async Task<IActionResult> GetCartByUserId(string userId)
         {
             try
@@ -54,7 +60,10 @@ namespace BlindBoxSS.API.Controllers
             {
                 bool result = await _cartService.UpdateCartItemQuantity(model.CartId, model.UserId, model.Quantity);
                 if (result)
+                {
+                    await _responseCacheService.RemoveCacheResponseAsync($"/api/Cart");
                     return Ok(new { message = "Cart item updated successfully." });
+                }
                 else
                     return BadRequest(new { message = "Failed to update cart item." });
             }
@@ -73,13 +82,16 @@ namespace BlindBoxSS.API.Controllers
         }
 
         [HttpDelete("delete-cart/{cartId}")]
-        public async Task<IActionResult> DeleteCartItem(Guid cartId)
+        public async Task<IActionResult> DeleteCartItem(Guid cartId,Guid userId)
         {
             try
             {
                 bool isDeleted = await _cartService.DeleteCartItem(cartId);
                 if (isDeleted)
+                {
+                    await _responseCacheService.RemoveCacheResponseAsync($"/api/Cart");
                     return Ok(new { message = "Cart item deleted successfully." });
+                }
                 else
                     return NotFound(new { message = "Cart item not found." });
             }

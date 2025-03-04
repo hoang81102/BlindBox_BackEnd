@@ -34,6 +34,13 @@ builder.Services.AddSingleton(payOS);
 builder.Services.InstallerServicesInAssembly(builder.Configuration);
 
 var app = builder.Build();
+// Cấu hình CORS
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin-allow-popups";
+    await next();
+});
+
 
 app.UseCors("AllowAll");
 

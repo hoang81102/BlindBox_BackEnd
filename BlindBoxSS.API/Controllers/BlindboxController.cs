@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BlindBoxSS.API.Attributes;
+using Microsoft.AspNetCore.Mvc;
 using Models;
+using Services.Cache;
 using Services.Product;
 
 namespace BlindBoxSS.API.Controllers
@@ -9,20 +11,23 @@ namespace BlindBoxSS.API.Controllers
     public class BlindboxController : ControllerBase
     {
         private readonly IBlindBoxService _service;
+        private readonly IResponseCacheService _responseCacheService;
 
-        public BlindboxController(IBlindBoxService service)
+        public BlindboxController(IBlindBoxService service, IResponseCacheService responseCacheService)
         {
             _service = service;
+            _responseCacheService = responseCacheService;
         }
 
         [HttpGet("getAll")]
-        public async Task<ActionResult<IEnumerable<BlindBox>>> GetAll()
+        public async Task<ActionResult> GetAll()
         {
             var blindBoxes = await _service.GetAllAsync();
             return Ok(blindBoxes);
         }
 
         [HttpGet("GetAll-paged")]
+        [CacheAttribute(1000)]
         public async Task<IActionResult> GetAllBlindBoxes(int pageNumber = 1, int pageSize = 10)
         {
             var result = await _service.GetAll(pageNumber, pageSize);
