@@ -43,7 +43,7 @@ namespace BlindBoxSS.API.Controllers
         [HttpPost("addWallet")]
         public async Task<IActionResult> PaymentSuccess([FromQuery] string accountId, [FromQuery] int amount)
         {
-            if (string.IsNullOrEmpty(accountId) || amount <= 0)
+            if (string.IsNullOrEmpty(accountId) || amount < 0)
             {
                 return BadRequest(new { Message = "Invalid accountId or amount." });
             }

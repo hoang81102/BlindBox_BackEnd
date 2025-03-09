@@ -1,4 +1,5 @@
 ﻿using BlindBoxSS.API.Attributes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -7,8 +8,9 @@ using Services.DTO;
 
 namespace BlindBoxSS.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("cart-management")]
     [ApiController]
+    
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
@@ -20,7 +22,8 @@ namespace BlindBoxSS.API.Controllers
             _responseCacheService = responseCacheService;
         }
 
-        [HttpPost("add-to-cart")]
+        [HttpPost("managed-carts/add-to-cart")]
+        [Authorize("UserPolicy")]
         public async Task<IActionResult> AddToCart([FromBody] CartDTO cartDto)
         {
             if (cartDto == null || string.IsNullOrWhiteSpace(cartDto.UserId))
@@ -38,8 +41,10 @@ namespace BlindBoxSS.API.Controllers
             }
         }
 
-        [HttpGet("get-cart/{userId}")]
-        [CacheAttribute(1000)]
+       
+        [HttpGet("managed-carts/{userId}")]
+        [Cache(1000)]
+        [Authorize("UserPolicy")]
         public async Task<IActionResult> GetCartByUserId(string userId)
         {
             try
@@ -53,7 +58,8 @@ namespace BlindBoxSS.API.Controllers
             }
         }
 
-        [HttpPut("update-quantity")]
+        [HttpPut("managed-carts/update-quantity")]
+        [Authorize("UserPolicy")]
         public async Task<IActionResult> UpdateCartItemQuantity([FromBody] UpdateCartItemDTO model)
         {
             try
@@ -81,7 +87,8 @@ namespace BlindBoxSS.API.Controllers
             }
         }
 
-        [HttpDelete("delete-cart/{cartId}")]
+        [HttpDelete("managed-carts/delete/{cartId}")]
+        [Authorize("UserPolicy")]
         public async Task<IActionResult> DeleteCartItem(Guid cartId,Guid userId)
         {
             try

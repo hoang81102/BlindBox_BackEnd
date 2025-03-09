@@ -1,8 +1,8 @@
 [
   {
-    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
+    "ContainingType": "BlindBoxSS.API.Controllers.AdminController",
     "Method": "UpdateUser",
-    "RelativePath": "api/{id}",
+    "RelativePath": "api/Admin/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -22,12 +22,23 @@
   },
   {
     "ContainingType": "BlindBoxSS.API.Controllers.AdminController",
-    "Method": "GetAllUsers",
-    "RelativePath": "api/Admin/GetAllUsers",
+    "Method": "GetAllAccounts",
+    "RelativePath": "api/Admin/GetAll",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
+    "Parameters": [
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -151,75 +162,6 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
-    "Method": "AddToCart",
-    "RelativePath": "api/Cart/add-to-cart",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "cartDto",
-        "Type": "Services.DTO.CartDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
-    "Method": "DeleteCartItem",
-    "RelativePath": "api/Cart/delete-cart/{cartId}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "cartId",
-        "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "userId",
-        "Type": "System.Guid",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
-    "Method": "GetCartByUserId",
-    "RelativePath": "api/Cart/get-cart/{userId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
-    "Method": "UpdateCartItemQuantity",
-    "RelativePath": "api/Cart/update-quantity",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "model",
-        "Type": "Services.DTO.UpdateCartItemDTO",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
     "Method": "ConfirmEmail",
     "RelativePath": "api/confirm-email",
@@ -252,27 +194,6 @@
         "Name": "request",
         "Type": "DAO.Contracts.UserRequestAndResponse\u002BForgotPasswordRequest",
         "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "BlindBoxSS.API.Controllers.AuthController",
-    "Method": "GetAllAccounts",
-    "RelativePath": "api/GetAll",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "pageNumber",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -623,6 +544,75 @@
         "Name": "orderId",
         "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "GetCartByUserId",
+    "RelativePath": "cart-management/managed-carts/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "AddToCart",
+    "RelativePath": "cart-management/managed-carts/add-to-cart",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartDto",
+        "Type": "Services.DTO.CartDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "DeleteCartItem",
+    "RelativePath": "cart-management/managed-carts/delete/{cartId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BlindBoxSS.API.Controllers.CartController",
+    "Method": "UpdateCartItemQuantity",
+    "RelativePath": "cart-management/managed-carts/update-quantity",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Services.DTO.UpdateCartItemDTO",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

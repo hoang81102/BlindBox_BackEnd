@@ -1,4 +1,5 @@
 ﻿using BlindBoxSS.API.Attributes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services.Cache;
@@ -8,6 +9,7 @@ namespace BlindBoxSS.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BlindboxController : ControllerBase
     {
         private readonly IBlindBoxService _service;

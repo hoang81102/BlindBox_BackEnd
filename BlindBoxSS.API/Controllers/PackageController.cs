@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services.Product;
 
@@ -6,6 +7,7 @@ namespace BlindBoxSS.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PackageController : ControllerBase
     {
         private readonly IPackageService _packageService;
