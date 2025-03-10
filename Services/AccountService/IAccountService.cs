@@ -1,10 +1,5 @@
-﻿using Repositories.Pagging;
+﻿using Services.Pagging;
 using Services.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static DAO.Contracts.UserRequestAndResponse;
 
 namespace Services.AccountService

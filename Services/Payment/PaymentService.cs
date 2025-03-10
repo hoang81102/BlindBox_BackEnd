@@ -1,5 +1,5 @@
-﻿using Net.payOS.Types;
-using Net.payOS;
+﻿using Net.payOS;
+using Net.payOS.Types;
 using Services.Payment;
 using Services.Request;
 public class PaymentService : IPaymentService
@@ -13,8 +13,10 @@ public class PaymentService : IPaymentService
 
     public async Task<CreatePaymentResult> CreatePaymentLinkAsync(CreatePaymentLinkRequest request)
     {
-        int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
-        ItemData item = new ItemData(request.productName, 1, request.price);
+        //int orderCode = int.Parse(DateTimeOffset.Now.ToString("ffffff"));
+        //parse orderCode to long
+        long orderCode = long.Parse(request.orderId);
+        ItemData item = new ItemData(request.orderId, 1, request.price);
         List<ItemData> items = new List<ItemData> { item };
         PaymentData paymentData = new PaymentData(orderCode, request.price, request.description, items, request.cancelUrl, request.returnUrl);
 

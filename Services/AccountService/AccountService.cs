@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;
-using Repositories.Pagging;
 using Repositories.WalletRepo;
 using Services.Email;
+using Services.Pagging;
 using Services.Request;
 using System.Security.Cryptography;
 using System.Text;
@@ -59,7 +59,7 @@ namespace Services.AccountService
             // 🚀 Tạo token xác thực email
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
-            await  _emailService.SendConfirmationEmailAsync(newUser, token);
+            await _emailService.SendConfirmationEmailAsync(newUser, token);
             await _tokenService.GenerateToken(newUser);
             newUser.CreateAt = DateTime.Now;
             newUser.UpdateAt = DateTime.Now;
@@ -338,9 +338,9 @@ namespace Services.AccountService
             using var sha256 = SHA256.Create();
             var refreshTokenHash = sha256.ComputeHash(Encoding.UTF8.GetBytes(refreshToken));
             user.RefreshToken = Convert.ToBase64String(refreshTokenHash);
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);  
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(2);
 
-      
+
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
@@ -359,9 +359,9 @@ namespace Services.AccountService
 
         public async Task<PaginatedList<UserDTO>> GetAllAccountsAsync(int pageNumber, int pageSize)
         {
-            IQueryable<ApplicationUser> users =  _userManager.Users.AsQueryable();
-            IQueryable<UserDTO> listAccount =  users.Select(user => _mapper.Map<UserDTO>(user));
-            return await PaginatedList<UserDTO>.CreateAsync(listAccount,pageNumber,pageSize);
+            IQueryable<ApplicationUser> users = _userManager.Users.AsQueryable();
+            IQueryable<UserDTO> listAccount = users.Select(user => _mapper.Map<UserDTO>(user));
+            return await PaginatedList<UserDTO>.CreateAsync(listAccount, pageNumber, pageSize);
         }
         public async Task<UserDTO> AdminUpdateAsync(Guid id, UpdateUserRequest request)
         {

@@ -1,7 +1,7 @@
 namespace Services.Request
 {
     public record CreatePaymentLinkRequest(
-        string productName,
+        string orderId,
         string description,
         int price,
         string returnUrl,
