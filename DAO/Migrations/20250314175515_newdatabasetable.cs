@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DAO.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class newdatabasetable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,6 +57,7 @@ namespace DAO.Migrations
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AvatarURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -288,6 +289,25 @@ namespace DAO.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BlindBoxImages",
+                columns: table => new
+                {
+                    BlindBoxImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BlindBoxId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlindBoxImages", x => x.BlindBoxImageId);
+                    table.ForeignKey(
+                        name: "FK_BlindBoxImages_BlindBoxes_BlindBoxId",
+                        column: x => x.BlindBoxId,
+                        principalTable: "BlindBoxes",
+                        principalColumn: "BlindBoxId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Packages",
                 columns: table => new
                 {
@@ -312,20 +332,19 @@ namespace DAO.Migrations
                 columns: table => new
                 {
                     VoucherId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DiscountMoney = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Money = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OrderId1 = table.Column<int>(type: "int", nullable: false)
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Voucher", x => x.VoucherId);
                     table.ForeignKey(
-                        name: "FK_Voucher_Order_OrderId1",
-                        column: x => x.OrderId1,
+                        name: "FK_Voucher_Order_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Order",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
@@ -494,6 +513,11 @@ namespace DAO.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BlindBoxImages_BlindBoxId",
+                table: "BlindBoxImages",
+                column: "BlindBoxId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Carts_applicationUserId",
                 table: "Carts",
                 column: "applicationUserId");
@@ -541,9 +565,9 @@ namespace DAO.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Voucher_OrderId1",
+                name: "IX_Voucher_OrderId",
                 table: "Voucher",
-                column: "OrderId1");
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallet_AccountId",
@@ -586,6 +610,9 @@ namespace DAO.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "BlindBoxImages");
 
             migrationBuilder.DropTable(
                 name: "Carts");

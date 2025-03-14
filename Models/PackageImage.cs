@@ -21,6 +21,7 @@ namespace Models
         [StringLength(255)]
         public string ImageUrl { get; set; }
 
+        [ForeignKey("PackageId")]
         public virtual Package? Package { get; set; }
     }
 }

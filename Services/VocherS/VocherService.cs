@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Services.VocherS
 {
-    public  class VocherService :IVocherService
+    public class VocherService : IVocherService
     {
         private readonly IVocherRepository _vocherRepository;
 

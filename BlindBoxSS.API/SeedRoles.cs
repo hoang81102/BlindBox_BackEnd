@@ -35,6 +35,7 @@ namespace BlindBoxSS.API
                     Gender = "Male",
                     PhoneNumber = "0123456789",
                     Address = "Thu Duc",
+                    AvatarURL = "https://www.w3schools.com/howto/img_avatar.png",
                     EmailConfirmed = true,
                     CreateAt = DateTime.UtcNow,
                     UpdateAt = DateTime.UtcNow

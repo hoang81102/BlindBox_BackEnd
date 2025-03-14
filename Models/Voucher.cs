@@ -10,7 +10,7 @@ namespace Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid VoucherId { get; set; } = Guid.NewGuid();
 
-        
+        [Required]
         public int? OrderId { get; set; }
 
         [Required]

@@ -1,19 +1,15 @@
-﻿using Repositories.UnitOfWork;
+﻿using BlindBoxSS.API.Services;
+using Repositories.OrderRep;
+using Repositories.Product;
+using Repositories.UnitOfWork;
+using Repositories.WalletRepo;
+using Services;
 using Services.AccountService;
 using Services.Email;
-using Services;
-using BlindBoxSS.API.Services;
-using Repositories.Product;
-using Repositories.WalletRepo;
+using Services.OrderS;
 using Services.Payment;
 using Services.Product;
 using Services.Wallet;
-using Services.OrderS;
-using Repositories.OrderRep;
-using Repositories.CategoryRepo;
-using Services.CategoryS;
-using Repositories.VocherRepo;
-using Services.VocherS;
 
 namespace BlindBoxSS.API.DI
 {
@@ -26,8 +22,8 @@ namespace BlindBoxSS.API.DI
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICartService, CartService>();
-           services.AddScoped<IPaymentService, PaymentService>();
-           services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<IWalletTransactionRepository, WalletTransactionRepository>();
             services.AddScoped<IWalletService, WalletService>();
             services.AddScoped<IWalletTransactionService, WalletTransactionService>();
@@ -39,10 +35,8 @@ namespace BlindBoxSS.API.DI
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IVocherRepository, VocherRepository>();
-            services.AddScoped<IVocherService, VocherService>();
+            services.AddScoped<IBlindBoxImageService, BlindBoxImageService>();
+            services.AddScoped<IPackageImageService, PackageImageService>();
         }
     }
 }

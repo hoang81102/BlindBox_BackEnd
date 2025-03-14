@@ -42,5 +42,7 @@ namespace Models
         [Required]
         [StringLength(50)]
         public string BlindBoxStatus { get; set; }
+
+        public virtual ICollection<BlindBoxImage>? Images { get; set; }
     }
 }

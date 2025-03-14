@@ -5,7 +5,7 @@ namespace Services
 {
     public class CartService : ICartService
     {
-        public readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public CartService(IUnitOfWork unitOfWork)
         {
@@ -14,49 +14,49 @@ namespace Services
 
         public async Task AddToCart(CartDTO cartDto)
         {
-       
-                if (cartDto.Quantity <= 0)
-                    throw new ArgumentException("Quantity must be greater than zero.");
 
-                var cartRepository = _unitOfWork.GetRepository<Cart>();
+            if (cartDto.Quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than zero.");
 
-                // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-                var existingCartItem = await cartRepository.FindAsync(c => c.UserId == cartDto.UserId &&
-                                                                            c.BlindBoxId == cartDto.BlindBoxId &&
-                                                                            c.PackageId == cartDto.PackageId);
-                if (existingCartItem != null)
+            var cartRepository = _unitOfWork.GetRepository<Cart>();
+
+            // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+            var existingCartItem = await cartRepository.FindAsync(c => c.UserId == cartDto.UserId &&
+                                                                        c.BlindBoxId == cartDto.BlindBoxId &&
+                                                                        c.PackageId == cartDto.PackageId);
+            if (existingCartItem != null)
+            {
+                existingCartItem.Quantity += cartDto.Quantity;
+                await cartRepository.UpdateAsync(existingCartItem);
+            }
+            else
+            {
+                var newCart = new Cart
                 {
-                    existingCartItem.Quantity += cartDto.Quantity;
-                    await cartRepository.UpdateAsync(existingCartItem);
-                }
-                else
-                {
-                    var newCart = new Cart
-                    {
-                        CartId = Guid.NewGuid(), // Tạo mới GUID cho mỗi Cart
-                        UserId = cartDto.UserId,
-                        BlindBoxId = cartDto.BlindBoxId,
-                        PackageId = cartDto.PackageId,
-                        Quantity = cartDto.Quantity,
-                        CreateDate = DateTime.UtcNow
-                    };
-                    await cartRepository.InsertAsync(newCart);
-                }
-
-                await _unitOfWork.SaveAsync();
+                    CartId = Guid.NewGuid(), // Tạo mới GUID cho mỗi Cart
+                    UserId = cartDto.UserId,
+                    BlindBoxId = cartDto.BlindBoxId,
+                    PackageId = cartDto.PackageId,
+                    Quantity = cartDto.Quantity,
+                    CreateDate = DateTime.UtcNow
+                };
+                await cartRepository.InsertAsync(newCart);
             }
 
+            await _unitOfWork.SaveAsync();
+        }
 
-        
+
+
         public async Task<IEnumerable<Cart>> GetCartByUserId(string userId)
-            {
-                    var cartRepository = _unitOfWork.GetRepository<Cart>();
+        {
+            var cartRepository = _unitOfWork.GetRepository<Cart>();
 
-                    // Sử dụng phương thức FindListAsync để lấy danh sách giỏ hàng của người dùng
-                    var carts = await cartRepository.FindListAsync(c => c.UserId == userId);
+            // Sử dụng phương thức FindListAsync để lấy danh sách giỏ hàng của người dùng
+            var carts = await cartRepository.FindListAsync(c => c.UserId == userId);
 
-                    return carts;
-           }
+            return carts;
+        }
 
         public async Task<bool> UpdateCartItemQuantity(Guid cartId, string userId, int quantity)
         {
@@ -88,7 +88,7 @@ namespace Services
 
         public async Task<bool> DeleteCartItem(Guid cartId)
         {
-           
+
             var cartRepository = _unitOfWork.GetRepository<Cart>();
             var cartItem = await cartRepository.GetByIdAsync(cartId);
             if (cartItem == null)

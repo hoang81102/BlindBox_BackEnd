@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAO.Migrations
 {
     [DbContext(typeof(BlindBoxDbContext))]
-    [Migration("20250310165652_init")]
-    partial class init
+    [Migration("20250314175515_newdatabasetable")]
+    partial class newdatabasetable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -287,6 +287,9 @@ namespace DAO.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("AvatarURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -406,6 +409,27 @@ namespace DAO.Migrations
                     b.HasKey("BlindBoxId");
 
                     b.ToTable("BlindBoxes");
+                });
+
+            modelBuilder.Entity("Models.BlindBoxImage", b =>
+                {
+                    b.Property<Guid>("BlindBoxImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlindBoxId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("BlindBoxImageId");
+
+                    b.HasIndex("BlindBoxId");
+
+                    b.ToTable("BlindBoxImages");
                 });
 
             modelBuilder.Entity("Models.Category", b =>
@@ -577,10 +601,8 @@ namespace DAO.Migrations
                     b.Property<decimal>("Money")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("OrderId1")
+                    b.Property<int?>("OrderId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -588,7 +610,7 @@ namespace DAO.Migrations
 
                     b.HasKey("VoucherId");
 
-                    b.HasIndex("OrderId1");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Voucher");
                 });
@@ -730,6 +752,17 @@ namespace DAO.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Models.BlindBoxImage", b =>
+                {
+                    b.HasOne("Models.BlindBox", "BlindBox")
+                        .WithMany("Images")
+                        .HasForeignKey("BlindBoxId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BlindBox");
+                });
+
             modelBuilder.Entity("Models.Order", b =>
                 {
                     b.HasOne("Models.ApplicationUser", "Account")
@@ -794,7 +827,7 @@ namespace DAO.Migrations
                 {
                     b.HasOne("Models.Order", "Order")
                         .WithMany("Vouchers")
-                        .HasForeignKey("OrderId1")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -833,6 +866,11 @@ namespace DAO.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Wallet");
+                });
+
+            modelBuilder.Entity("Models.BlindBox", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Models.Category", b =>
