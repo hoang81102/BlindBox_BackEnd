@@ -32,7 +32,6 @@ namespace Services.AccountService
 
         Task<PaginatedList<UserDTO>> GetAllAccountsAsync(int pageNumber, int pageSize);
         Task<UserDTO> AdminUpdateAsync(Guid id, UpdateUserRequest request);
-
-
+        Task<UserResponse> UpdateAsync(Guid parseID, UpdateOrderCodeRequest newacount);
     }
 }

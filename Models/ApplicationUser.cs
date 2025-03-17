@@ -22,6 +22,8 @@ namespace Models
         public DateTime? RefreshTokenExpiryTime { get; set; }
         public DateTime CreateAt { get; set; }
         public DateTime UpdateAt { get; set; }
-       
+
+        public int? orderCode { get; set; }
+
     }
 }

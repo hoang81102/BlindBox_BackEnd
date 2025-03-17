@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Models;
 using Repositories.WalletRepo;
+using Services.Payment;
 using Services.Wallet;
 using System.Globalization;
 using TimeZoneConverter;
@@ -11,12 +12,14 @@ namespace BlindBoxSS.API.Services
     {
         private readonly IWalletRepository _walletRepository;
         private readonly IWalletTransactionService _walletTransactionService;
+        private readonly IPaymentService _paymentService;
         private readonly IConfiguration _configuration;
 
-        public WalletService(IWalletRepository walletRepository, IWalletTransactionService walletTransactionService,IConfiguration configuration)
+        public WalletService(IWalletRepository walletRepository, IWalletTransactionService walletTransactionService,IConfiguration configuration, IPaymentService paymentService)
         {
             _walletRepository = walletRepository;
             _walletTransactionService = walletTransactionService;
+            _paymentService = paymentService;
             _configuration = configuration;
         }
 
@@ -31,7 +34,7 @@ namespace BlindBoxSS.API.Services
             return wallet;
         }
 
-        public async Task AddMoneyToWalletAsync(string accountId, int amount)
+        public async Task AddMoneyToWalletAsync(string accountId, int amount,int orderCode)
         {
             var dateFormat = _configuration["TransactionSettings:DateFormat"] ?? "yyyy-MM-ddTHH:mm:ssZ";
             bool useUTC = bool.TryParse(_configuration["TransactionSettings:UseUTC"], out bool utc) && utc;
@@ -44,8 +47,14 @@ namespace BlindBoxSS.API.Services
                 throw new Exception("Wallet not found");
             }
 
-            wallet.Balance += amount;
-            await _walletRepository.UpdateWalletAsync(wallet);
+            //check payment status
+            var checkingPayment = await _paymentService.GetPaymentLinkInformationAsync(orderCode);
+                if (checkingPayment.status == "PAID")
+            {
+                wallet.Balance += amount;
+                await _walletRepository.UpdateWalletAsync(wallet);
+            }
+           
 
             if (!useUTC)
             {

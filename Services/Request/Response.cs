@@ -4,6 +4,6 @@ namespace Services.Request
     int error,
     String message,
     object? data
-);
+    );
 }
 

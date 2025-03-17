@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Models;
+﻿using Models;
 using Repositories.UnitOfWork;
 using Services.DTO;
 
@@ -40,9 +39,12 @@ namespace Services.Product
         public async Task<IEnumerable<BlindBoxImage>> GetBlindBoxImages(Guid blindboxImageId)
         {
             var blindboxImageRepo = _unitOfWork.GetRepository<BlindBoxImage>();
+            var blindboxRepo = _unitOfWork.GetRepository<BlindBox>();
 
             var blindboxImages = await blindboxImageRepo.FindListAsync(b => b.BlindBoxImageId == blindboxImageId);
             //var blindboxImages = await blindboxImageRepo.Entities.Where(b => b.BlindBoxImageId == blindboxImageId).Select(b => b.BlindBox).FirstOrDefaultAsync();
+
+            /*var blindboxs = await blindboxRepo.FindListAsync(b => blindboxImages.Contains());*/
 
             if (blindboxImages == null)
             {
@@ -50,7 +52,7 @@ namespace Services.Product
             }
             else
             {
-                
+
                 return blindboxImages;
             }
             //var blindboxImages = await blindboxImageRepo.FindAllAsync(b => b.BlindBoxId == blindboxId);

@@ -37,6 +37,8 @@ namespace Models
         [Required]
         public int PhoneNumber { get; set; }
 
+        public int? OrderCode { get; set; }
+
         [Required]
         public decimal DiscountMoney { get; set; }
 

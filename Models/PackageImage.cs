@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models
 {
@@ -21,6 +16,7 @@ namespace Models
         [StringLength(255)]
         public string ImageUrl { get; set; }
 
+        [Required]
         [ForeignKey("PackageId")]
         public virtual Package? Package { get; set; }
     }

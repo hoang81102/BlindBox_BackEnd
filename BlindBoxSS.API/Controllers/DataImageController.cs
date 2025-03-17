@@ -137,10 +137,10 @@ namespace BlindBoxSS.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Error = ex.Message });
+                return NotFound();
             }
 
-            return BadRequest();
+            return NotFound();
         }
 
         [HttpPut("Pacakge-Images")]

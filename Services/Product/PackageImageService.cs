@@ -1,12 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Models;
+﻿using Models;
 using Repositories.UnitOfWork;
 using Services.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Product
 {
@@ -45,7 +39,7 @@ namespace Services.Product
         public async Task<IEnumerable<PackageImage>> GetPackageImages(Guid packageImageId)
         {
 
-            
+
             var packageImageRepo = _unitOfWork.GetRepository<PackageImage>();
 
             var packageImages = await packageImageRepo.FindAllAsync(b => b.PackageImageId == packageImageId);
@@ -59,6 +53,17 @@ namespace Services.Product
             {
                 return packageImages;
             }
+        }
+
+        public async Task<Package?> FindPackageByImageId(Guid packageImageId)
+        {
+            var packageImage = await _unitOfWork.GetRepository<PackageImage>().FindOneAsync(pi => pi.PackageImageId == packageImageId);
+            if (packageImage == null)
+            {
+                throw new Exception("PackageImage not found");
+            }
+
+            return packageImage.Package;
         }
 
         public async Task<bool> UpdatePackageImage(Guid packageImageId, string imageURL)

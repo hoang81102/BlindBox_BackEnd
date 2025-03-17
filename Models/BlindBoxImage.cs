@@ -16,6 +16,7 @@ namespace Models
         [StringLength(255)]
         public string ImageUrl { get; set; }
 
+        [Required]
         [ForeignKey("BlindBoxId")]
         public virtual BlindBox? BlindBox { get; set; }
 

@@ -1,9 +1,4 @@
 ﻿using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Repositories.Product
 {
@@ -14,5 +9,6 @@ namespace Repositories.Product
         Task<Package> AddPackageAsync(Package package);
         Task<Package?> UpdatePackageAsync(Package package);
         Task<bool> DeletePackageAsync(Guid id);
+        Task<Package?> GetPackageByImageIdAsync(Guid packageImageId);
     }
 }

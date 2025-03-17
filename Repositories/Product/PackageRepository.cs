@@ -1,22 +1,15 @@
 ﻿using DAO;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Repositories.GenericRepo;
 
 namespace Repositories.Product
 {
-    public class PackageRepository : IPackageRepository
+    public class PackageRepository : GenericRepository<Package>, IPackageRepository
     {
         private readonly BlindBoxDbContext _context;
 
-        public PackageRepository(BlindBoxDbContext context)
-        {
-            _context = context;
-        }
+        public PackageRepository(BlindBoxDbContext context) : base(context) { }
 
         public async Task<IEnumerable<Package>> GetAllPackagesAsync()
         {
@@ -59,6 +52,14 @@ namespace Repositories.Product
             _context.Set<Package>().Remove(package);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<Package?> GetPackageByImageIdAsync(Guid packageImageId)
+        {
+            return await _context.PackageImages
+                .Where(pi => pi.PackageImageId == packageImageId)
+                .Select(pi => pi.Package)
+                .FirstOrDefaultAsync();
         }
     }
 }
